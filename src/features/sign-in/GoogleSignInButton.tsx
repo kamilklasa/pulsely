@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Button, GoogleIcon } from "@/shared/ui";
 import { useSignInWithGoogle } from "./sign-in.data";
 
 export function GoogleSignInButton({ className }: { className?: string }) {
+  const { t } = useTranslation("sign-in");
   const signInWithGoogle = useSignInWithGoogle();
 
   return (
@@ -14,7 +16,7 @@ export function GoogleSignInButton({ className }: { className?: string }) {
       disabled={signInWithGoogle.isPending}
     >
       <GoogleIcon data-icon="inline-start" />
-      Continue with Google
+      {t("google.continue")}
     </Button>
   );
 }

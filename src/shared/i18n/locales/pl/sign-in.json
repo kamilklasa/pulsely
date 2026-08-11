@@ -1,0 +1,16 @@
+{
+  "heading": "Zaloguj się do Pulsely",
+  "divider": "lub",
+  "form": {
+    "emailPlaceholder": "ty@przyklad.pl",
+    "emailRequired": "Adres e-mail jest wymagany",
+    "emailInvalid": "Podaj prawidłowy adres e-mail",
+    "submit": "Wyślij magiczny link",
+    "submitting": "Wysyłanie…",
+    "mutationError": "Nie udało się wysłać linku. Spróbuj ponownie.",
+    "checkEmail": "Sprawdź {{email}}, aby otrzymać link do logowania."
+  },
+  "google": {
+    "continue": "Kontynuuj przez Google"
+  }
+}

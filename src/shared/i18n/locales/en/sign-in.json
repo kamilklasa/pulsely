@@ -1,0 +1,16 @@
+{
+  "heading": "Sign in to Pulsely",
+  "divider": "or",
+  "form": {
+    "emailPlaceholder": "you@example.com",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "submit": "Send magic link",
+    "submitting": "Sending…",
+    "mutationError": "Couldn't send the link. Try again.",
+    "checkEmail": "Check {{email}} for a sign-in link."
+  },
+  "google": {
+    "continue": "Continue with Google"
+  }
+}
