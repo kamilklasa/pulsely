@@ -1,0 +1,9 @@
+{
+  "form": {
+    "titlePlaceholder": "Add a task…",
+    "titleRequired": "Title is required",
+    "submit": "Add",
+    "submitting": "Adding…",
+    "mutationError": "Couldn't create the task. Try again."
+  }
+}

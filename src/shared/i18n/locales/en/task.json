@@ -1,0 +1,8 @@
+{
+  "columns": {
+    "backlog": "Backlog",
+    "this_week": "This Week",
+    "today": "Today",
+    "done": "Done"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "form": {
+    "titlePlaceholder": "Dodaj zadanie…",
+    "titleRequired": "Tytuł jest wymagany",
+    "submit": "Dodaj",
+    "submitting": "Dodawanie…",
+    "mutationError": "Nie udało się utworzyć zadania. Spróbuj ponownie."
+  }
+}

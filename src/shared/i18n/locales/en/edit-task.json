@@ -1,0 +1,12 @@
+{
+  "trigger": "Edit task",
+  "heading": "Edit task",
+  "form": {
+    "titlePlaceholder": "Title",
+    "titleRequired": "Title is required",
+    "descriptionPlaceholder": "Description (optional)",
+    "save": "Save",
+    "saving": "Saving…",
+    "mutationError": "Couldn't save your changes. Try again."
+  }
+}

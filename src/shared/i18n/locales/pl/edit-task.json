@@ -1,0 +1,12 @@
+{
+  "trigger": "Edytuj zadanie",
+  "heading": "Edytuj zadanie",
+  "form": {
+    "titlePlaceholder": "Tytuł",
+    "titleRequired": "Tytuł jest wymagany",
+    "descriptionPlaceholder": "Opis (opcjonalnie)",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "mutationError": "Nie udało się zapisać zmian. Spróbuj ponownie."
+  }
+}
