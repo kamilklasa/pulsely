@@ -1,0 +1,4 @@
+{
+  "pattern": "^(main){1}$|^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\\([a-z0-9-]+\\))?-[a-z0-9]+(-[a-z0-9]+)*$",
+  "errorMsg": "Branch must be main, or <type>(<scope>)-<kebab-case description>, type one of: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test"
+}
