@@ -1,26 +1,58 @@
 import { useTranslation } from "react-i18next";
-import { Switch } from "@/shared/ui";
+import {
+  GbFlagIcon,
+  PlFlagIcon,
+  Select,
+  SelectItem,
+  SelectPopup,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
-import { setLocale, useLocale } from "@/shared/i18n";
+import { type Locale, setLocale, useLocale } from "@/shared/i18n";
+
+const FLAG_ICONS: Record<Locale, typeof GbFlagIcon> = {
+  en: GbFlagIcon,
+  pl: PlFlagIcon,
+};
 
 export function LanguageSwitcher({ className }: { className?: string }) {
   const { t } = useTranslation("common");
   const locale = useLocale();
-  const isPolish = locale === "pl";
 
   return (
-    <label className={cn("inline-flex items-center gap-2 text-sm select-none", className)}>
-      <span className={cn("transition-colors", isPolish ? "text-muted-foreground" : "font-medium text-foreground")}>
-        {t("language.en")}
-      </span>
-      <Switch
-        checked={isPolish}
-        onCheckedChange={(checked) => setLocale(checked ? "pl" : "en")}
-        aria-label={t("language.label")}
-      />
-      <span className={cn("transition-colors", isPolish ? "font-medium text-foreground" : "text-muted-foreground")}>
-        {t("language.pl")}
-      </span>
-    </label>
+    <Select
+      value={locale}
+      onValueChange={(value) => setLocale(value as Locale)}
+      items={[
+        { value: "en", label: t("language.en") },
+        { value: "pl", label: t("language.pl") },
+      ]}
+    >
+      <SelectTrigger className={cn(className)} aria-label={t("language.label")}>
+        <SelectValue>
+          {(value: Locale) => {
+            const FlagIcon = FLAG_ICONS[value];
+            return (
+              <span className="flex items-center gap-2">
+                <FlagIcon />
+                {t(`language.${value}`)}
+              </span>
+            );
+          }}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectPopup>
+        {(Object.keys(FLAG_ICONS) as Locale[]).map((option) => {
+          const FlagIcon = FLAG_ICONS[option];
+          return (
+            <SelectItem key={option} value={option}>
+              <FlagIcon />
+              {t(`language.${option}`)}
+            </SelectItem>
+          );
+        })}
+      </SelectPopup>
+    </Select>
   );
 }
