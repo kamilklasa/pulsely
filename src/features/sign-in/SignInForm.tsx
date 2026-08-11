@@ -1,12 +1,16 @@
+import { useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui";
 import { Input } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
 import { useSignInWithMagicLink } from "./sign-in.data";
-import { emailSchema } from "./sign-in.schema";
+import { createEmailSchema } from "./sign-in.schema";
 
 export function SignInForm({ className }: { className?: string }) {
+  const { t } = useTranslation("sign-in");
   const magicLink = useSignInWithMagicLink();
+  const emailSchema = useMemo(() => createEmailSchema(t), [t]);
 
   const form = useForm({
     defaultValues: { email: "" },
@@ -18,7 +22,7 @@ export function SignInForm({ className }: { className?: string }) {
   if (magicLink.isSuccess) {
     return (
       <p className={cn("text-sm text-muted-foreground", className)}>
-        Check {form.getFieldValue("email")} for a sign-in link.
+        {t("form.checkEmail", { email: form.getFieldValue("email") })}
       </p>
     );
   }
@@ -39,7 +43,7 @@ export function SignInForm({ className }: { className?: string }) {
             <Input
               type="email"
               name={field.name}
-              placeholder="you@example.com"
+              placeholder={t("form.emailPlaceholder")}
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(event) => field.handleChange(event.target.value)}
@@ -56,12 +60,12 @@ export function SignInForm({ className }: { className?: string }) {
         )}
       </form.Field>
       {magicLink.isError ? (
-        <p className="text-sm text-destructive">Couldn't send the link. Try again.</p>
+        <p className="text-sm text-destructive">{t("form.mutationError")}</p>
       ) : null}
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Button type="submit" size="lg" disabled={!canSubmit || magicLink.isPending}>
-            {isSubmitting || magicLink.isPending ? "Sending…" : "Send magic link"}
+            {isSubmitting || magicLink.isPending ? t("form.submitting") : t("form.submit")}
           </Button>
         )}
       </form.Subscribe>
