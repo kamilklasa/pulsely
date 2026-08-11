@@ -5,7 +5,7 @@ import commonEn from "./locales/en/common.json";
 import signInEn from "./locales/en/sign-in.json";
 import commonPl from "./locales/pl/common.json";
 import signInPl from "./locales/pl/sign-in.json";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "./i18n.types";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "./i18n.utils";
 
 // Namespaced per FSD slice — "common" for cross-cutting strings (e.g. the
 // language switcher), one namespace per feature/page slice (e.g. "sign-in").

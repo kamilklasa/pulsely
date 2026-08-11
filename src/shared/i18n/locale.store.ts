@@ -1,6 +1,7 @@
 import { Store } from "@tanstack/store";
 import { i18n } from "./i18n.config";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from "./i18n.types";
+import type { Locale } from "./i18n.types";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "./i18n.utils";
 
 function toLocale(lng: string | undefined): Locale {
   const candidate = lng?.split("-")[0];

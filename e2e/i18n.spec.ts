@@ -11,7 +11,7 @@ test("switching language shows Polish copy immediately, without a reload", async
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Sign in to Pulsely" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Polski" }).click();
+  await page.getByRole("switch", { name: "Language" }).click();
 
   await expect(page.getByRole("heading", { name: "Zaloguj się do Pulsely" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Wyślij magiczny link" })).toBeVisible();
@@ -20,7 +20,7 @@ test("switching language shows Polish copy immediately, without a reload", async
 
 test("reloading the page preserves the chosen language", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Polski" }).click();
+  await page.getByRole("switch", { name: "Language" }).click();
   await expect(page.getByRole("heading", { name: "Zaloguj się do Pulsely" })).toBeVisible();
 
   await page.reload();
