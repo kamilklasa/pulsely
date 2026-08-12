@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { startOfDay, startOfWeek as startOfCalendarWeek } from "@/shared/lib/calendar";
 import type { Task, TaskChange, TaskStatus } from "./task.types";
 
 // The board's one transition rule: a task can't jump from the backlog straight
@@ -14,17 +15,15 @@ export function requiredTitleSchema(message: string) {
   return v.pipe(v.string(), v.trim(), v.nonEmpty(message));
 }
 
+// Both boundaries come from the shared calendar rather than being computed here:
+// the time dashboard reports on the same "today" and "this week" the columns
+// count against, and two implementations of Monday would eventually drift.
 export function startOfToday(now = new Date()): Date {
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  return start;
+  return new Date(startOfDay(now.getTime()));
 }
 
-// Monday-first, matching both locales the app ships.
 export function startOfWeek(now = new Date()): Date {
-  const start = startOfToday(now);
-  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-  return start;
+  return new Date(startOfCalendarWeek(now.getTime()));
 }
 
 // Rank for a card dropped between `before` and `after` (either side missing =

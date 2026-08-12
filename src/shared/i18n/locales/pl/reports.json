@@ -1,8 +1,4 @@
 {
   "heading": "Raporty",
-  "subheading": "Ile zaplanowane, a ile faktycznie skończone — tydzień po tygodniu.",
-  "empty": {
-    "title": "Nie ma jeszcze czego raportować",
-    "description": "Raporty są w budowie. Kiedy będą gotowe, tutaj z zamkniętych zadań zrobi się trend."
-  }
+  "subheading": "Gdzie faktycznie poszły godziny — dziś i w skali bieżącego tygodnia."
 }

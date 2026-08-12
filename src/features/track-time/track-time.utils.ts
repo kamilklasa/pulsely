@@ -22,6 +22,12 @@ export function formatEntryStart(iso: string, locale: string): string {
   }).format(new Date(iso));
 }
 
+// The dashboard's column labels. The weekday alone, abbreviated by the locale:
+// under a chart of one week the date is noise, and Monday is Monday either way.
+export function formatWeekday(instant: number, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(instant));
+}
+
 // The stop side of the range only needs the clock: it is read next to a start
 // that already carries the date, and a run that spans midnight is rare enough
 // not to be worth the extra noise on every other row.
