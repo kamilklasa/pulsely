@@ -40,16 +40,20 @@ export function KanbanColumn({
   status,
   tasks,
   progress,
+  blocked = false,
   className,
 }: {
   status: TaskStatus;
   tasks: Task[];
   progress?: ColumnProgress;
+  // The card currently being dragged isn't allowed to land here (see
+  // `canTransition`) — the column stops reacting to the drag.
+  blocked?: boolean;
   className?: string;
 }) {
   const { t: tTask } = useTranslation("task");
   const { t: tCreate } = useTranslation("create-task");
-  const { setNodeRef, isOver } = useDroppable({ id: status });
+  const { setNodeRef, isOver } = useDroppable({ id: status, disabled: blocked });
   const [adding, setAdding] = useState(false);
   const taskIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
   const {
@@ -66,8 +70,9 @@ export function KanbanColumn({
         // An outline, not a border: it takes no space in the box, so the edge
         // lands on the same pixel line as "today"'s animated ring — which is
         // painted by a pseudo-element inset to the padding box.
-        "flex flex-col gap-3 rounded-xl bg-muted/40 p-3 outline-1 -outline-offset-1 outline-border/70",
+        "flex flex-col gap-3 rounded-xl bg-muted/40 p-3 outline-1 -outline-offset-1 outline-border/70 transition-opacity",
         status === "today" && "animated-border outline-none",
+        blocked && "opacity-40",
         className,
       )}
     >

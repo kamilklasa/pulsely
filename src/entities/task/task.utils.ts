@@ -1,5 +1,12 @@
 import * as v from "valibot";
-import type { Task } from "./task.types";
+import type { Task, TaskStatus } from "./task.types";
+
+// The board's one transition rule: a task can't jump from the backlog straight
+// to done, because that hides work nobody ever picked up. Everything else is
+// allowed — backward moves included, so a finished task can be reopened freely.
+export function canTransition(from: TaskStatus, to: TaskStatus): boolean {
+  return !(from === "backlog" && to === "done");
+}
 
 // Shared by create-task and edit-task's schemas, which each wrap this with
 // their own `TFunction<namespace>` closure for locale-correct messages.

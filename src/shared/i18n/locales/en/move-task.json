@@ -2,5 +2,6 @@
   "toPrevious": "Move left",
   "toNext": "Move right",
   "markDone": "Mark as done",
-  "markUndone": "Move back to Today"
+  "markUndone": "Move back to Today",
+  "blockedToDone": "Move it out of Backlog first — a task can't go straight to Done"
 }

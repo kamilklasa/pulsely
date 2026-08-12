@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { arrayMove } from "@dnd-kit/sortable";
 import {
   TASK_STATUSES,
+  canTransition,
   countDoneSince,
   sortOrderBetween,
   startOfToday,
@@ -86,6 +87,10 @@ export function KanbanBoard() {
     const targetStatus = overTask ? overTask.status : (over.id as TaskStatus);
     const column = columns[targetStatus] as Task[] | undefined;
     if (!column) return;
+    // The blocked column is already dimmed and refuses to be hovered, but its
+    // cards are sortable droppables of their own — so a drop landing on one of
+    // them still has to be turned away here.
+    if (!canTransition(dragged.status, targetStatus)) return;
 
     // Where the card ends up: on top of another card it takes that card's slot
     // (pushing it down/up), on empty space it goes to the bottom.
@@ -125,6 +130,9 @@ export function KanbanBoard() {
             status={status}
             tasks={columns[status]}
             progress={progress[status]}
+            // Says "not there" while the card is still in the air, instead of
+            // letting the drop look accepted and then snap back.
+            blocked={activeTask ? !canTransition(activeTask.status, status) : false}
             className="min-w-[17rem] flex-1 snap-start"
           />
         ))}
