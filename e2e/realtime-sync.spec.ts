@@ -11,6 +11,7 @@ if (!supabaseUrl || !serviceRoleKey) {
 }
 
 const TASK_TITLE = "Synced across tabs";
+const RENAMED_TITLE = "Renamed in the other tab";
 
 // Same magic-link redemption the other board specs use; the session it leaves in local storage is
 // what the second tab picks up, which is exactly the "two tabs, one user" case under test.
@@ -47,40 +48,31 @@ test("a second open tab follows every change without reloading", async ({ page, 
   await expect(column(observer, "Backlog").getByRole("button", { name: TASK_TITLE })).toBeVisible();
 
   await page.getByRole("button", { name: TASK_TITLE }).hover();
+  await page.getByRole("button", { name: "More actions" }).click();
+  await page.getByRole("menuitem", { name: "Edit task" }).click();
+  // Exact, or it also matches the still-mounted "Task title…" field behind the dialog.
+  await page.getByPlaceholder("Title", { exact: true }).fill(RENAMED_TITLE);
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(observer.getByRole("button", { name: RENAMED_TITLE })).toBeVisible();
+  await expect(observer.getByRole("button", { name: TASK_TITLE })).toHaveCount(0);
+
+  await page.getByRole("button", { name: RENAMED_TITLE }).hover();
   await page.getByRole("button", { name: "Move right" }).click();
   await expect(
-    column(observer, "This Week").getByRole("button", { name: TASK_TITLE }),
+    column(observer, "This Week").getByRole("button", { name: RENAMED_TITLE }),
   ).toBeVisible();
-  await expect(column(observer, "Backlog").getByRole("button", { name: TASK_TITLE })).toHaveCount(
-    0,
-  );
+  await expect(
+    column(observer, "Backlog").getByRole("button", { name: RENAMED_TITLE }),
+  ).toHaveCount(0);
 
-  await page.getByRole("button", { name: TASK_TITLE }).hover();
+  await page.getByRole("button", { name: RENAMED_TITLE }).hover();
   await page.getByRole("button", { name: "More actions" }).click();
   await page.getByRole("menuitem", { name: "Delete task" }).click();
-  await expect(observer.getByRole("button", { name: TASK_TITLE })).toHaveCount(0);
+  await expect(observer.getByRole("button", { name: RENAMED_TITLE })).toHaveCount(0);
 });
 
-test("a tab never receives another user's tasks", async ({ page, baseURL, browser }) => {
-  await signInOnBoard(page, baseURL);
-
-  // A second user in their own context, so nothing is shared but the database.
-  const otherContext = await browser.newContext({ baseURL });
-  const otherPage = await otherContext.newPage();
-  await signInOnBoard(otherPage, baseURL);
-
-  await otherPage.getByRole("button", { name: "Add task" }).first().click();
-  await otherPage.getByPlaceholder("Task title…").fill("Someone else's task");
-  await otherPage.getByRole("button", { name: "Add", exact: true }).click();
-  await expect(otherPage.getByRole("button", { name: "Someone else's task" })).toBeVisible();
-
-  // The first user's own write proves the channel is live and delivering — so the other user's
-  // task being absent is a real exclusion, not just a board that never heard anything.
-  await page.getByRole("button", { name: "Add task" }).first().click();
-  await page.getByPlaceholder("Task title…").fill(TASK_TITLE);
-  await page.getByRole("button", { name: "Add", exact: true }).click();
-  await expect(page.getByRole("button", { name: TASK_TITLE })).toBeVisible();
-
-  await expect(page.getByRole("button", { name: "Someone else's task" })).toHaveCount(0);
-  await otherContext.close();
-});
+// Cross-user isolation is deliberately not tested here: at this tier a second user's task is absent
+// from the first user's board whether or not realtime works at all (the initial fetch is already
+// RLS-filtered), so the assertion can't fail. It's proved where it can fail — in
+// task.realtime.integration.test.ts, which watches one user's channel for silence during another
+// user's writes and asserts the join to a foreign topic is refused outright.

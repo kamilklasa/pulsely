@@ -1,4 +1,4 @@
-import { createClient, type RealtimeChannel, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { TaskChange } from "./task.types";
 
@@ -42,7 +42,6 @@ async function signInAsNewUser(): Promise<SignedInUser> {
 // Collects every task change that reaches one user's channel, so a test can both wait for the ones
 // it expects and assert that nothing else showed up.
 async function subscribeToTaskChanges(user: SignedInUser): Promise<{
-  channel: RealtimeChannel;
   received: TaskChange[];
   waitForCount: (count: number) => Promise<void>;
 }> {
@@ -63,7 +62,7 @@ async function subscribeToTaskChanges(user: SignedInUser): Promise<{
     });
   });
 
-  return { channel, received, waitForCount: (count) => waitFor(() => received.length >= count) };
+  return { received, waitForCount: (count) => waitFor(() => received.length >= count) };
 }
 
 async function waitFor(condition: () => boolean, timeoutMs = 5000): Promise<void> {

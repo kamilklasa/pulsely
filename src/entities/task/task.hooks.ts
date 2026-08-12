@@ -5,13 +5,6 @@ import { taskKeys } from "./task.data";
 import { applyTaskChange } from "./task.utils";
 import type { Task, TaskChange } from "./task.types";
 
-// One channel per owner — the topic the task trigger broadcasts to, and the only
-// one the realtime.messages policy lets this user read (see the
-// task_realtime_broadcast migration).
-export function taskChannelTopic(ownerId: string): string {
-  return `task:${ownerId}`;
-}
-
 const TASK_CHANGE_EVENTS = ["INSERT", "UPDATE", "DELETE"] as const;
 
 // Keeps the cached board level with the database while the screen is open, so a
@@ -25,7 +18,10 @@ export function useTaskRealtimeSync(ownerId: string | undefined) {
     if (!ownerId) return;
 
     let unmounted = false;
-    const channel = supabase.channel(taskChannelTopic(ownerId), { config: { private: true } });
+    // One channel per owner — the topic the task trigger broadcasts to, and the
+    // only one the realtime.messages policy lets this user read (see the
+    // task_realtime_broadcast migration).
+    const channel = supabase.channel(`task:${ownerId}`, { config: { private: true } });
 
     for (const event of TASK_CHANGE_EVENTS) {
       channel.on<TaskChange>("broadcast", { event }, ({ payload }) => {
