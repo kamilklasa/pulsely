@@ -2,5 +2,6 @@
   "toPrevious": "Przenieś w lewo",
   "toNext": "Przenieś w prawo",
   "markDone": "Oznacz jako zrobione",
-  "markUndone": "Cofnij do Dzisiaj"
+  "markUndone": "Cofnij do Dzisiaj",
+  "blockedToDone": "Najpierw przenieś z Backlogu — zadanie nie może trafić od razu do Zrobione"
 }
