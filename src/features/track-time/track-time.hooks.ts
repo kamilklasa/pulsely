@@ -1,6 +1,11 @@
 import { useEffect, useReducer } from "react";
-import { useSelector } from "@tanstack/react-store";
-import { startTracking, stopTracking, trackTimeStore } from "./track-time.store";
+import {
+  findRunningEntry,
+  taskElapsedMs,
+  useStartTimer,
+  useStopTimer,
+  useTimeEntries,
+} from "@/entities/time-entry";
 
 export interface Stopwatch {
   elapsedMs: number;
@@ -8,9 +13,9 @@ export interface Stopwatch {
   toggle: () => void;
 }
 
-// The store only changes on start/stop, so something has to re-render the
-// clock in between. Only the one running card and the status bar mount a tick,
-// which is why an idle board schedules no timers at all.
+// Nothing changes in the data between a start and a stop, so something has to
+// re-render the clock in between. Only the one running card and the status bar
+// mount a tick, which is why an idle board schedules no timers at all.
 function useTick(enabled: boolean): void {
   const [, tick] = useReducer((count: number) => count + 1, 0);
 
@@ -22,28 +27,37 @@ function useTick(enabled: boolean): void {
 }
 
 export function useStopwatch(taskId: string): Stopwatch {
-  const active = useSelector(trackTimeStore, (state) => state.active);
-  const totals = useSelector(trackTimeStore, (state) => state.totals);
-  const running = active?.taskId === taskId;
-  useTick(running);
+  const { data: entries } = useTimeEntries();
+  const startTimer = useStartTimer();
+  const stopTimer = useStopTimer();
 
-  const banked = totals[taskId] ?? 0;
+  const running = findRunningEntry(entries ?? [])?.task_id === taskId;
+  useTick(running);
 
   return {
     running,
-    elapsedMs: banked + (running && active ? Date.now() - active.startedAt : 0),
-    toggle: () => (running ? stopTracking() : startTracking(taskId)),
+    elapsedMs: taskElapsedMs(entries ?? [], taskId, Date.now()),
+    toggle: () => (running ? stopTimer.mutate() : startTimer.mutate(taskId)),
   };
 }
 
-export function useActiveTimer(): { taskId: string; elapsedMs: number } | null {
-  const active = useSelector(trackTimeStore, (state) => state.active);
-  const totals = useSelector(trackTimeStore, (state) => state.totals);
-  useTick(Boolean(active));
+export interface ActiveTimer {
+  taskId: string;
+  elapsedMs: number;
+  stop: () => void;
+}
 
-  if (!active) return null;
+export function useActiveTimer(): ActiveTimer | null {
+  const { data: entries } = useTimeEntries();
+  const stopTimer = useStopTimer();
+
+  const running = findRunningEntry(entries ?? []);
+  useTick(running !== null);
+
+  if (!running) return null;
   return {
-    taskId: active.taskId,
-    elapsedMs: (totals[active.taskId] ?? 0) + (Date.now() - active.startedAt),
+    taskId: running.task_id,
+    elapsedMs: taskElapsedMs(entries ?? [], running.task_id, Date.now()),
+    stop: () => stopTimer.mutate(),
   };
 }

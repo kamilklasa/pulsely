@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useTasks } from "@/entities/task";
 import { Button } from "@/shared/ui";
 import { useActiveTimer } from "./track-time.hooks";
-import { stopTracking } from "./track-time.store";
 import { formatDuration } from "./track-time.utils";
 
 // A symmetric curve is the right call here, unlike in UI state transitions:
@@ -70,7 +69,7 @@ export function ActiveTimerBar() {
             variant="ghost"
             size="icon-sm"
             aria-label={t("stop")}
-            onClick={stopTracking}
+            onClick={active.stop}
             className="shrink-0 rounded-full text-muted-foreground bg-muted hover:text-foreground"
           >
             <Square className="size-3 fill-current" />
