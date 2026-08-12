@@ -9,3 +9,24 @@ export function formatDuration(ms: number): string {
 
   return hours > 0 ? `${hours}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`;
 }
+
+// Durations are formatDuration's job; these two are the "when" on either side
+// of a logged run. Left to the locale's own conventions (12- vs 24-hour,
+// day/month order) rather than a hand-rolled format.
+export function formatEntryStart(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
+// The stop side of the range only needs the clock: it is read next to a start
+// that already carries the date, and a run that spans midnight is rare enough
+// not to be worth the extra noise on every other row.
+export function formatClockTime(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }).format(
+    new Date(iso),
+  );
+}

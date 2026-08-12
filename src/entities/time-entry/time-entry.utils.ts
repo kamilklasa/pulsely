@@ -33,16 +33,36 @@ export function applyTimerStop(entries: TimeEntry[], stoppedAt: string): TimeEnt
   );
 }
 
+// Removing a mistaken run. Kept here rather than inline in the mutation so the
+// optimistic patch and the row the list drops are the same operation.
+export function removeEntry(entries: TimeEntry[], entryId: string): TimeEntry[] {
+  return entries.filter((entry) => entry.id !== entryId);
+}
+
+// One run's length: a stopped run is measured between its own timestamps, the
+// open one against the clock — which is what makes its row tick.
+export function entryDurationMs(entry: TimeEntry, now: number): number {
+  const started = Date.parse(entry.started_at);
+  const stopped = entry.stopped_at === null ? now : Date.parse(entry.stopped_at);
+  // A clock that jumped backwards mid-run can store an end before its start.
+  // That run is worth nothing; it must never eat into real tracked time.
+  return Math.max(0, stopped - started);
+}
+
+// The task's own runs, newest first — the order the details list reads in.
+// Sorted on a copy: the cached array belongs to the query, not to a render.
+export function taskEntriesNewestFirst(entries: TimeEntry[], taskId: string): TimeEntry[] {
+  return entries
+    .filter((entry) => entry.task_id === taskId)
+    .sort((a, b) => Date.parse(b.started_at) - Date.parse(a.started_at));
+}
+
 // Total time on a task: the runs that have ended, plus the live slice of the
 // one still going — which is why this takes `now` and the UI re-renders it on a
 // tick rather than storing a number that would go stale on the next frame.
 export function taskElapsedMs(entries: TimeEntry[], taskId: string, now: number): number {
-  return entries.reduce((total, entry) => {
-    if (entry.task_id !== taskId) return total;
-    const started = Date.parse(entry.started_at);
-    const stopped = entry.stopped_at === null ? now : Date.parse(entry.stopped_at);
-    // A clock that jumped backwards mid-run can store an end before its start.
-    // That run is worth nothing; it must never eat into real tracked time.
-    return total + Math.max(0, stopped - started);
-  }, 0);
+  return entries.reduce(
+    (total, entry) => (entry.task_id === taskId ? total + entryDurationMs(entry, now) : total),
+    0,
+  );
 }

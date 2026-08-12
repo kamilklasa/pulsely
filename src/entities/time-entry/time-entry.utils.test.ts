@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   applyTimerStart,
   applyTimerStop,
+  entryDurationMs,
   findRunningEntry,
+  removeEntry,
   taskElapsedMs,
+  taskEntriesNewestFirst,
 } from "./time-entry.utils";
 import type { TimeEntry } from "./time-entry.types";
 
@@ -127,6 +130,86 @@ describe("applyTimerStop", () => {
     applyTimerStop(entries, at(3 * MINUTE));
 
     expect(running.stopped_at).toBeNull();
+  });
+});
+
+describe("entryDurationMs", () => {
+  const now = BASE + 10 * MINUTE;
+
+  it("measures a stopped run between its own timestamps", () => {
+    expect(
+      entryDurationMs(entry("done", { started_at: at(0), stopped_at: at(4 * MINUTE) }), now),
+    ).toBe(4 * MINUTE);
+  });
+
+  // The one row in the list whose number has to move while you watch it.
+  it("measures the open run against now", () => {
+    expect(
+      entryDurationMs(entry("running", { started_at: at(6 * MINUTE), stopped_at: null }), now),
+    ).toBe(4 * MINUTE);
+  });
+
+  it("is zero for a run that ends before it starts", () => {
+    expect(
+      entryDurationMs(entry("skewed", { started_at: at(5 * MINUTE), stopped_at: at(0) }), now),
+    ).toBe(0);
+  });
+});
+
+describe("taskEntriesNewestFirst", () => {
+  it("keeps only the entries on the task", () => {
+    const mine = entry("mine");
+    const result = taskEntriesNewestFirst([mine, entry("theirs", { task_id: "task-b" })], "task-a");
+    expect(result).toEqual([mine]);
+  });
+
+  // The list reads top-down as "what I just did", so the newest run leads.
+  it("orders the newest run first", () => {
+    const older = entry("older", { started_at: at(0) });
+    const newer = entry("newer", { started_at: at(5 * MINUTE) });
+    expect(taskEntriesNewestFirst([older, newer], "task-a")).toEqual([newer, older]);
+  });
+
+  // Same trap findRunningEntry has: Postgres serves `+00:00`, an optimistic
+  // entry writes `Z`, and "+" sorts below "." as text.
+  it("orders by instant, not by timestamp text", () => {
+    const older = entry("older", { started_at: "2026-08-12T10:00:00+00:00" });
+    const newer = entry("newer", { started_at: "2026-08-12T10:05:00.000Z" });
+    expect(taskEntriesNewestFirst([older, newer], "task-a")).toEqual([newer, older]);
+  });
+
+  it("does not reorder the entries it was given", () => {
+    const older = entry("older", { started_at: at(0) });
+    const newer = entry("newer", { started_at: at(5 * MINUTE) });
+    const entries = [older, newer];
+
+    taskEntriesNewestFirst(entries, "task-a");
+
+    expect(entries).toEqual([older, newer]);
+  });
+
+  it("is empty for a task with no entries", () => {
+    expect(taskEntriesNewestFirst([entry("theirs", { task_id: "task-b" })], "task-a")).toEqual([]);
+  });
+});
+
+describe("removeEntry", () => {
+  it("drops the entry with the given id", () => {
+    const kept = entry("kept");
+    expect(removeEntry([kept, entry("doomed")], "doomed")).toEqual([kept]);
+  });
+
+  it("leaves the list alone when the id is not in it", () => {
+    const entries = [entry("one"), entry("two")];
+    expect(removeEntry(entries, "three")).toEqual(entries);
+  });
+
+  it("does not mutate the entries it was given", () => {
+    const entries = [entry("one"), entry("doomed")];
+
+    removeEntry(entries, "doomed");
+
+    expect(entries).toHaveLength(2);
   });
 });
 

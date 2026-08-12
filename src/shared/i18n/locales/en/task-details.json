@@ -7,6 +7,9 @@
   },
   "timeline": {
     "title": "Timeline",
-    "description": "Every start, pause and column change will land here as a dated entry once time tracking is stored server-side."
+    "total": "Total {{duration}}",
+    "running": "running",
+    "empty": "No time logged on this task yet. Press Start to open a run.",
+    "delete": "Delete the {{duration}} entry"
   }
 }

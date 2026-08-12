@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/shared/api/supabase-client";
-import { applyTimerStart, applyTimerStop } from "./time-entry.utils";
+import { applyTimerStart, applyTimerStop, removeEntry } from "./time-entry.utils";
 import type { TimeEntry } from "./time-entry.types";
 
 export const timeEntryKeys = {
@@ -113,5 +113,18 @@ export function useStopTimer() {
       if (error) throw error;
     },
     (entries) => applyTimerStop(entries, new Date().toISOString()),
+  );
+}
+
+// Dropping a mistaken run. Filtered by id alone: the delete policy scopes the
+// statement to the caller's own rows, so an id belonging to somebody else
+// matches nothing rather than deleting their time.
+export function useDeleteTimeEntry() {
+  return useTimeEntryMutation(
+    async (entryId: string) => {
+      const { error } = await supabase.from("time_entry").delete().eq("id", entryId);
+      if (error) throw error;
+    },
+    (entries, entryId) => removeEntry(entries, entryId),
   );
 }
