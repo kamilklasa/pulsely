@@ -7,6 +7,9 @@
   },
   "timeline": {
     "title": "Oś czasu",
-    "description": "Każdy start, pauza i zmiana kolumny trafi tu jako wpis z datą, kiedy pomiar czasu będzie zapisywany po stronie serwera."
+    "total": "Łącznie {{duration}}",
+    "running": "w toku",
+    "empty": "Nie zmierzono jeszcze czasu w tym zadaniu. Naciśnij Start, aby rozpocząć pomiar.",
+    "delete": "Usuń wpis {{duration}}"
   }
 }

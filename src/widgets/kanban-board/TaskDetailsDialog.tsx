@@ -1,27 +1,9 @@
 import { useTranslation } from "react-i18next";
 import type { Task } from "@/entities/task";
-import { TrackTimeButton, type Stopwatch } from "@/features/track-time";
+import { formatDuration, TrackTimeButton, type Stopwatch } from "@/features/track-time";
 import { Badge, Dialog, DialogDescription, DialogPopup, DialogTitle } from "@/shared/ui";
 import { TimeBreakdown } from "./TimeBreakdown";
-
-// Three bars on a rail, no labels and no numbers: it reads as "a timeline goes
-// here" without inventing entries that a user could mistake for their own.
-function TimelinePlaceholder() {
-  return (
-    <ol aria-hidden className="mt-4 space-y-3.5 border-l border-border pl-5">
-      {[72, 48, 60].map((width, index) => (
-        <li key={index} className="relative">
-          <span className="absolute top-0.5 -left-[23px] size-2.5 rounded-full border-2 border-background bg-muted-foreground/25" />
-          <span
-            className="block h-2.5 rounded-full bg-muted-foreground/15"
-            style={{ width: `${width}%` }}
-          />
-          <span className="mt-1.5 block h-2 w-14 rounded-full bg-muted-foreground/10" />
-        </li>
-      ))}
-    </ol>
-  );
-}
+import { TimeEntryList } from "./TimeEntryList";
 
 export function TaskDetailsDialog({
   task,
@@ -68,12 +50,14 @@ export function TaskDetailsDialog({
           <section className="px-6 py-5">
             <div className="flex items-center justify-between gap-3">
               <h3 className="text-sm font-medium">{t("timeline.title")}</h3>
-              <Badge>{t("soon")}</Badge>
+              {/* The same Seam A total the card's stopwatch shows, restated
+                  over the list it is the sum of — so deleting a run visibly
+                  takes its time off the task. */}
+              <span className="text-xs tabular-nums text-muted-foreground">
+                {t("timeline.total", { duration: formatDuration(stopwatch.elapsedMs) })}
+              </span>
             </div>
-            <TimelinePlaceholder />
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              {t("timeline.description")}
-            </p>
+            <TimeEntryList taskId={task.id} />
           </section>
         </div>
       </DialogPopup>
