@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import type { Task, TaskStatus } from "./task.types";
+import type { Task, TaskChange, TaskStatus } from "./task.types";
 
 // The board's one transition rule: a task can't jump from the backlog straight
 // to done, because that hides work nobody ever picked up. Everything else is
@@ -36,6 +36,24 @@ export function sortOrderBetween(before: Task | undefined, after: Task | undefin
   if (before) return before.sort_order + 1;
   if (after) return after.sort_order - 1;
   return Date.now() / 1000;
+}
+
+// Folds a realtime change into the cached board instead of refetching it: the
+// broadcast already carries the whole row, so a round-trip would only confirm
+// what the payload says. Re-sorted on every write because the cached array's
+// order *is* each column's ranking (groupByStatus preserves it), so a row that
+// moved has to land where the server's `order("sort_order")` would put it.
+export function applyTaskChange(tasks: Task[], change: TaskChange): Task[] {
+  if (change.operation === "DELETE") {
+    const removedId = change.old_record?.id;
+    return removedId ? tasks.filter((task) => task.id !== removedId) : tasks;
+  }
+
+  const { record } = change;
+  if (!record) return tasks;
+  return [...tasks.filter((task) => task.id !== record.id), record].sort(
+    (a, b) => a.sort_order - b.sort_order,
+  );
 }
 
 // A finished task keeps no record of the bucket it came from, so it counts
