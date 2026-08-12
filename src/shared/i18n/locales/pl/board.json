@@ -1,4 +1,5 @@
 {
   "heading": "Tablica",
-  "signedInAs": "Zalogowano jako {{email}}"
+  "loading": "Wczytywanie zadań…",
+  "loadError": "Nie udało się wczytać zadań. Spróbuj odświeżyć."
 }

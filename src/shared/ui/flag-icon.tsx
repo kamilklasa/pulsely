@@ -7,7 +7,7 @@ function GbFlagIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
-      className={cn("size-5 shrink-0", className)}
+      className={cn("size-4 shrink-0", className)}
       {...props}
     >
       <defs>
@@ -31,7 +31,7 @@ function PlFlagIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
-      className={cn("size-5 shrink-0", className)}
+      className={cn("size-4 shrink-0", className)}
       {...props}
     >
       <defs>

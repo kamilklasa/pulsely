@@ -1,0 +1,24 @@
+{
+  "heading": "Ustawienia",
+  "subheading": "Twoje konto, bezpieczeństwo i połączone usługi.",
+  "soon": "Wkrótce",
+  "account": {
+    "title": "Konto",
+    "emailLabel": "Adres e-mail",
+    "save": "Zapisz",
+    "emailHelp": "Zmiana adresu wymaga potwierdzenia ze starej i nowej skrzynki, więc nie jest jeszcze podpięta."
+  },
+  "twoFactor": {
+    "title": "Uwierzytelnianie dwuskładnikowe",
+    "description": "Dodatkowy kod z aplikacji uwierzytelniającej przy każdym logowaniu."
+  },
+  "integrations": {
+    "title": "Integracje",
+    "description": "Usługi, które mogą Cię logować albo synchronizować się z tablicą.",
+    "google": "Google",
+    "connectedAs": "Połączono jako {{email}}",
+    "notConnected": "Niepołączone",
+    "connect": "Połącz",
+    "disconnect": "Odłącz"
+  }
+}

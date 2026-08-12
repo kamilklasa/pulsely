@@ -1,0 +1,11 @@
+{
+  "heading": "Search tasks",
+  "placeholder": "Search by title or description…",
+  "noResults": "Nothing matches “{{query}}”.",
+  "noTasks": "No tasks yet — add one on the board.",
+  "hints": {
+    "navigate": "navigate",
+    "open": "open",
+    "close": "Esc to close"
+  }
+}

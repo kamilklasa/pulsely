@@ -1,0 +1,24 @@
+{
+  "heading": "Settings",
+  "subheading": "Your account, security and connected services.",
+  "soon": "Soon",
+  "account": {
+    "title": "Account",
+    "emailLabel": "Email address",
+    "save": "Save",
+    "emailHelp": "Changing your address needs confirmation from both the old and the new inbox, so it isn't wired up yet."
+  },
+  "twoFactor": {
+    "title": "Two-factor authentication",
+    "description": "An extra code from your authenticator app on every sign-in."
+  },
+  "integrations": {
+    "title": "Integrations",
+    "description": "Services that can sign you in or sync with your board.",
+    "google": "Google",
+    "connectedAs": "Connected as {{email}}",
+    "notConnected": "Not connected",
+    "connect": "Connect",
+    "disconnect": "Disconnect"
+  }
+}

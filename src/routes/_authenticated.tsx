@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { AppShell } from "@/widgets/app-shell";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context, location }) => {
@@ -10,5 +11,11 @@ export const Route = createFileRoute("/_authenticated")({
       });
     }
   },
-  component: () => <Outlet />,
+  // Header and dock hang off the authenticated layout rather than each page,
+  // so every signed-in screen gets the same chrome for free.
+  component: () => (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  ),
 });

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { GoogleSignInButton, SignInForm } from "@/features/sign-in";
+import { LanguageSwitcher } from "@/features/language-switcher";
 import { Logo } from "@/shared/ui";
 
 export function SignInPage() {
@@ -7,6 +8,7 @@ export function SignInPage() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 p-8">
+      <LanguageSwitcher className="fixed top-4 right-4" />
       <div className="flex w-full max-w-xs flex-col items-center gap-4">
         <Logo className="h-16 w-11" />
         <h1 className="text-2xl font-semibold mb-1">{t("heading")}</h1>

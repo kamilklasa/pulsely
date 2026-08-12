@@ -1,0 +1,8 @@
+{
+  "heading": "Reports",
+  "subheading": "How much you planned versus how much you finished, week over week.",
+  "empty": {
+    "title": "Nothing to report yet",
+    "description": "Reports are still being built. Once they land, this is where your completed tasks turn into a trend."
+  }
+}

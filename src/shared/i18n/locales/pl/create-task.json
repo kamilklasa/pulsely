@@ -1,0 +1,11 @@
+{
+  "trigger": "Dodaj zadanie",
+  "form": {
+    "titlePlaceholder": "Tytuł zadania…",
+    "titleRequired": "Tytuł jest wymagany",
+    "submit": "Dodaj",
+    "submitting": "Dodawanie…",
+    "cancel": "Anuluj",
+    "mutationError": "Nie udało się utworzyć zadania. Spróbuj ponownie."
+  }
+}

@@ -1,4 +1,5 @@
 {
   "heading": "Board",
-  "signedInAs": "Signed in as {{email}}"
+  "loading": "Loading tasks…",
+  "loadError": "Couldn't load your tasks. Try refreshing."
 }

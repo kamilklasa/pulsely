@@ -1,0 +1,9 @@
+{
+  "home": "Go to board",
+  "search": "Search tasks…",
+  "nav": {
+    "tasks": "Tasks",
+    "reports": "Reports",
+    "settings": "Settings"
+  }
+}
