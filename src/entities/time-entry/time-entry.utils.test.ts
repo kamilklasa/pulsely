@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { findRunningEntry, startTimer, stopTimer, taskElapsedMs } from "./time-entry.utils";
+import {
+  applyTimerStart,
+  applyTimerStop,
+  findRunningEntry,
+  taskElapsedMs,
+} from "./time-entry.utils";
 import type { TimeEntry } from "./time-entry.types";
 
 const MINUTE = 60_000;
@@ -41,13 +46,23 @@ describe("findRunningEntry", () => {
     const newer = entry("newer", { started_at: at(MINUTE), stopped_at: null });
     expect(findRunningEntry([newer, older])).toEqual(newer);
   });
+
+  // The two open entries in that race reach the cache by different routes:
+  // Postgres serves `+00:00`, an optimistic entry writes `Z`. Compared as text
+  // the older one would win, because "+" sorts below ".".
+  it("ranks a server timestamp against an optimistic one by instant, not text", () => {
+    const older = entry("older", { started_at: "2026-08-12T10:00:00+00:00", stopped_at: null });
+    const newer = entry("newer", { started_at: "2026-08-12T10:05:00.000Z", stopped_at: null });
+    expect(findRunningEntry([older, newer])).toEqual(newer);
+    expect(findRunningEntry([newer, older])).toEqual(newer);
+  });
 });
 
-describe("startTimer (single-active-timer rule)", () => {
+describe("applyTimerStart (single-active-timer rule)", () => {
   const started = entry("new", { task_id: "task-b", started_at: at(5 * MINUTE), stopped_at: null });
 
   it("opens a running entry on the task", () => {
-    expect(startTimer([], started)).toEqual([started]);
+    expect(applyTimerStart([], started)).toEqual([started]);
   });
 
   // The rule the whole ticket turns on: a person works on one thing at a time,
@@ -55,7 +70,7 @@ describe("startTimer (single-active-timer rule)", () => {
   it("stops the timer running on another task", () => {
     const taskA = entry("task-a-run", { started_at: at(0), stopped_at: null });
 
-    const result = startTimer([taskA], started);
+    const result = applyTimerStart([taskA], started);
 
     expect(result).toEqual([{ ...taskA, stopped_at: started.started_at }, started]);
     expect(result.filter((candidate) => candidate.stopped_at === null)).toEqual([started]);
@@ -65,51 +80,51 @@ describe("startTimer (single-active-timer rule)", () => {
   // begins task B, so the two runs can never both count the same instant.
   it("closes the previous run at exactly the new one's start", () => {
     const taskA = entry("task-a-run", { started_at: at(0), stopped_at: null });
-    expect(startTimer([taskA], started)[0]?.stopped_at).toBe(at(5 * MINUTE));
+    expect(applyTimerStart([taskA], started)[0]?.stopped_at).toBe(at(5 * MINUTE));
   });
 
   it("closes the previous run even when it is on the same task", () => {
     const earlier = entry("earlier", { task_id: "task-b", started_at: at(0), stopped_at: null });
 
-    const result = startTimer([earlier], started);
+    const result = applyTimerStart([earlier], started);
 
     expect(result).toEqual([{ ...earlier, stopped_at: started.started_at }, started]);
   });
 
   it("leaves already-stopped entries alone", () => {
     const finished = entry("finished");
-    expect(startTimer([finished], started)).toEqual([finished, started]);
+    expect(applyTimerStart([finished], started)).toEqual([finished, started]);
   });
 
   it("does not mutate the entries it was given", () => {
     const running = entry("running", { stopped_at: null });
     const entries = [running];
 
-    startTimer(entries, started);
+    applyTimerStart(entries, started);
 
     expect(entries).toEqual([running]);
     expect(running.stopped_at).toBeNull();
   });
 });
 
-describe("stopTimer", () => {
+describe("applyTimerStop", () => {
   it("stamps the running entry with the stop time", () => {
     const running = entry("running", { stopped_at: null });
-    expect(stopTimer([running], at(3 * MINUTE))).toEqual([
+    expect(applyTimerStop([running], at(3 * MINUTE))).toEqual([
       { ...running, stopped_at: at(3 * MINUTE) },
     ]);
   });
 
   it("leaves a list with nothing running untouched", () => {
     const entries = [entry("one"), entry("two")];
-    expect(stopTimer(entries, at(3 * MINUTE))).toEqual(entries);
+    expect(applyTimerStop(entries, at(3 * MINUTE))).toEqual(entries);
   });
 
   it("does not mutate the entries it was given", () => {
     const running = entry("running", { stopped_at: null });
     const entries = [running];
 
-    stopTimer(entries, at(3 * MINUTE));
+    applyTimerStop(entries, at(3 * MINUTE));
 
     expect(running.stopped_at).toBeNull();
   });

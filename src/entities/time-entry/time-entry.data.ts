@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/shared/api/supabase-client";
-import { startTimer, stopTimer } from "./time-entry.utils";
+import { applyTimerStart, applyTimerStop } from "./time-entry.utils";
 import type { TimeEntry } from "./time-entry.types";
 
 export const timeEntryKeys = {
@@ -34,9 +34,10 @@ interface TimeEntryMutationContext {
 
 // Both timer writes patch the cache before the round-trip: a start/stop button
 // that waits on the network reads as a broken clock, since the elapsed time is
-// meant to start moving the instant it is pressed. The patch is the same pure
-// function the Seam A tests cover, so the optimistic board and the persisted
-// one can't drift apart.
+// meant to start moving the instant it is pressed. The patch applies the same
+// pure function the Seam A tests cover, so the board never shows a state the
+// rules wouldn't produce — only a start time a few milliseconds ahead of the
+// stored one, which the invalidate on settle corrects.
 function useTimeEntryMutation<TVariables>(
   mutationFn: (variables: TVariables) => Promise<void>,
   patch: (entries: TimeEntry[], variables: TVariables) => TimeEntry[],
@@ -88,7 +89,7 @@ export function useStartTimer() {
       if (error) throw error;
     },
     (entries, taskId) =>
-      startTimer(entries, {
+      applyTimerStart(entries, {
         // Replaced by the real row on the next fetch; it only has to be unique
         // enough to key a list for the moments in between.
         id: crypto.randomUUID(),
@@ -111,6 +112,6 @@ export function useStopTimer() {
         .is("stopped_at", null);
       if (error) throw error;
     },
-    (entries) => stopTimer(entries, new Date().toISOString()),
+    (entries) => applyTimerStop(entries, new Date().toISOString()),
   );
 }

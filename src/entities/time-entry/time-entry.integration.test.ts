@@ -164,6 +164,45 @@ describe("time entry CRUD + RLS isolation (Seam B)", () => {
     await clientA.from("time_entry").delete().eq("id", started.id);
   });
 
+  // The two statements useStartTimer issues, in the order it issues them, against a database that
+  // already has a run open. The ordering is the whole rule: insert-then-close would trip the unique
+  // index, and closing on `stopped_at is null` (rather than on an id) is what also catches a run
+  // this client never saw.
+  it("hands the timer over to another task in one start", async () => {
+    const otherTaskId = await createTask(clientA, "The task being handed to");
+    const { data: first } = await clientA
+      .from("time_entry")
+      .insert({ task_id: taskAId, started_at: "2026-08-12T14:00:00.000Z" })
+      .select()
+      .single();
+
+    const handoverAt = "2026-08-12T14:10:00.000Z";
+    const { error: closeError } = await clientA
+      .from("time_entry")
+      .update({ stopped_at: handoverAt })
+      .is("stopped_at", null);
+    expect(closeError).toBeNull();
+    const { data: second, error: startError } = await clientA
+      .from("time_entry")
+      .insert({ task_id: otherTaskId, started_at: handoverAt })
+      .select()
+      .single();
+    expect(startError).toBeNull();
+
+    const { data: open } = await clientA.from("time_entry").select("id").is("stopped_at", null);
+    expect(open?.map((entry) => entry.id)).toEqual([second.id]);
+
+    const { data: closed } = await clientA
+      .from("time_entry")
+      .select("stopped_at")
+      .eq("id", first.id)
+      .single();
+    // No gap and no overlap: the run that ended and the run that began share the instant.
+    expect(Date.parse(closed!.stopped_at)).toBe(Date.parse(second.started_at));
+
+    await clientA.from("time_entry").delete().in("id", [first.id, second.id]);
+  });
+
   // The domain layer closes the open run before starting the next one; this index is what stops
   // two devices racing past that rule and leaving the board with two clocks running.
   it("refuses a second running entry for the same owner", async () => {

@@ -23,14 +23,16 @@ create table time_entry (
   created_at timestamptz not null default now()
 );
 
--- Serves the board's only read: one owner's entries, per task, oldest first.
-create index time_entry_owner_task_idx on time_entry (owner_id, task_id, started_at);
+-- Serves the board's only read: one owner's entries, oldest first. Totals are
+-- summed per task on the client from that same list, so there is nothing to
+-- gain from carrying task_id in the index.
+create index time_entry_owner_started_at_idx on time_entry (owner_id, started_at);
 
 -- The single-active-timer rule is enforced in the domain layer (startTimer in
 -- entities/time-entry closes the open run before opening the next), so it stays
 -- unit testable without a database. This index is the backstop that keeps two
 -- devices from racing past it — no owner can ever hold two open entries.
-create unique index time_entry_one_running_per_owner on time_entry (owner_id)
+create unique index time_entry_one_running_per_owner_idx on time_entry (owner_id)
   where stopped_at is null;
 
 grant select, insert, update, delete on time_entry to authenticated;

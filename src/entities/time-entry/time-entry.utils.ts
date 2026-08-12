@@ -2,33 +2,32 @@ import type { TimeEntry } from "./time-entry.types";
 
 // Seam A: everything below is a pure function over a list of entries, so the
 // board's timer rules can be exercised without a database. The same functions
-// patch the query cache optimistically, which is what keeps the button's
-// response instant and the tested behaviour identical to the shipped one.
+// patch the query cache optimistically, so the rules the tests cover are the
+// ones the running board actually applies.
 
 // The open entry — at most one per owner, guaranteed by the partial unique
 // index in the create_time_entry migration.
 export function findRunningEntry(entries: TimeEntry[]): TimeEntry | null {
   return entries.reduce<TimeEntry | null>((running, entry) => {
     if (entry.stopped_at !== null) return running;
+    // Parsed, never compared as text: Postgres hands back `+00:00` where an
+    // optimistic entry writes `Z`, and `'+' < '.'` would rank the two wrong for
+    // the same instant.
+    if (running === null) return entry;
     // A stale cache racing a second device is the only way two entries are open
     // at once; the newest run is the one the person is sitting in front of.
-    return running === null || entry.started_at > running.started_at ? entry : running;
+    return Date.parse(entry.started_at) > Date.parse(running.started_at) ? entry : running;
   }, null);
 }
 
 // Starting a task closes whatever was running rather than running both — a
 // person works on one thing at a time. The previous run ends exactly where the
 // new one begins, so no instant is counted twice and none is lost between them.
-export function startTimer(entries: TimeEntry[], started: TimeEntry): TimeEntry[] {
-  return [
-    ...entries.map((entry) =>
-      entry.stopped_at === null ? { ...entry, stopped_at: started.started_at } : entry,
-    ),
-    started,
-  ];
+export function applyTimerStart(entries: TimeEntry[], started: TimeEntry): TimeEntry[] {
+  return [...applyTimerStop(entries, started.started_at), started];
 }
 
-export function stopTimer(entries: TimeEntry[], stoppedAt: string): TimeEntry[] {
+export function applyTimerStop(entries: TimeEntry[], stoppedAt: string): TimeEntry[] {
   return entries.map((entry) =>
     entry.stopped_at === null ? { ...entry, stopped_at: stoppedAt } : entry,
   );
