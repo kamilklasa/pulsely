@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSession } from "@/entities/session";
 import {
@@ -9,12 +8,12 @@ import {
   DialogPopup,
   DialogTitle,
   GoogleIcon,
-  Input,
   Switch,
 } from "@/shared/ui";
+import { ChangeEmailForm } from "./ChangeEmailForm";
 
-// Everything behind this dialog is still a stub — the badge is the honest way
-// to say so, instead of shipping controls that silently do nothing.
+// Two-factor and integrations are still stubs — the badge is the honest way to
+// say so, instead of shipping controls that silently do nothing.
 function SoonBadge() {
   const { t } = useTranslation("settings");
   return <Badge>{t("soon")}</Badge>;
@@ -57,13 +56,6 @@ export function SettingsDialog({
   const { t } = useTranslation("settings");
   const { session } = useSession();
   const currentEmail = session?.user.email ?? "";
-  const [email, setEmail] = useState(currentEmail);
-
-  // The session resolves after the first render on a cold load, and the user
-  // may have edited the field since — only a reopen resets it to the truth.
-  useEffect(() => {
-    if (open) setEmail(currentEmail);
-  }, [open, currentEmail]);
 
   // Supabase records every identity the account can sign in with; Google is
   // "connected" exactly when it's among them. Real status, stub controls.
@@ -81,27 +73,8 @@ export function SettingsDialog({
         {/* divide-y instead of nested cards: three settings rows don't need
             three elevations to read as three groups. */}
         <div className="max-h-[60vh] divide-y divide-border/60 overflow-y-auto border-t border-border/60">
-          <Section title={t("account.title")} action={<SoonBadge />}>
-            <div className="mt-3 flex flex-col gap-2">
-              <label htmlFor="settings-email" className="text-xs font-medium text-muted-foreground">
-                {t("account.emailLabel")}
-              </label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="settings-email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-                <Button type="button" size="lg" disabled>
-                  {t("account.save")}
-                </Button>
-              </div>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {t("account.emailHelp")}
-              </p>
-            </div>
+          <Section title={t("account.title")}>
+            <ChangeEmailForm />
           </Section>
 
           <Section
