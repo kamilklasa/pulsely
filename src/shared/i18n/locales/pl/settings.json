@@ -6,7 +6,22 @@
     "title": "Konto",
     "emailLabel": "Adres e-mail",
     "save": "Zapisz",
-    "emailHelp": "Zmiana adresu wymaga potwierdzenia ze starej i nowej skrzynki, więc nie jest jeszcze podpięta."
+    "saving": "Wysyłanie…",
+    "emailHelp": "Zmiana zadziała dopiero, gdy potwierdzisz ją z obecnej i z nowej skrzynki.",
+    "emailRequired": "Adres e-mail jest wymagany",
+    "emailInvalid": "Podaj poprawny adres e-mail",
+    "emailUnchanged": "To już jest Twój adres",
+    "pending": {
+      "title": "Czekamy na dwa potwierdzenia",
+      "body": "Wysłaliśmy link na {{current}} i na {{next}}. Otwórz oba, aby dokończyć zmianę — do tego czasu Twój adres pozostaje bez zmian.",
+      "change": "Wyślij na inny adres"
+    },
+    "error": {
+      "taken": "Tego adresu używa już inne konto.",
+      "rateLimited": "Zbyt wiele prób. Spróbuj ponownie za kilka minut.",
+      "invalid": "Ten adres został odrzucony. Sprawdź go i spróbuj ponownie.",
+      "generic": "Nie udało się rozpocząć zmiany. Spróbuj ponownie."
+    }
   },
   "twoFactor": {
     "title": "Uwierzytelnianie dwuskładnikowe",

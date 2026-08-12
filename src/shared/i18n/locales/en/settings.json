@@ -6,7 +6,22 @@
     "title": "Account",
     "emailLabel": "Email address",
     "save": "Save",
-    "emailHelp": "Changing your address needs confirmation from both the old and the new inbox, so it isn't wired up yet."
+    "saving": "Sending…",
+    "emailHelp": "The change only takes effect once you confirm it from both your current and your new inbox.",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "emailUnchanged": "This is already your address",
+    "pending": {
+      "title": "Waiting for two confirmations",
+      "body": "We sent a link to {{current}} and to {{next}}. Open both to finish the switch — until then your address stays the same.",
+      "change": "Send to a different address"
+    },
+    "error": {
+      "taken": "Another account already uses that address.",
+      "rateLimited": "Too many attempts. Try again in a few minutes.",
+      "invalid": "That address was rejected. Check it and try again.",
+      "generic": "Couldn't start the change. Try again."
+    }
   },
   "twoFactor": {
     "title": "Two-factor authentication",
