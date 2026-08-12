@@ -1,0 +1,13 @@
+{
+  "today": "Dzisiaj",
+  "week": "Ten tydzień",
+  "running": "Zegar chodzi — sumy już go liczą",
+  "chart": {
+    "title": "Ten tydzień, dzień po dniu",
+    "day": "{{day}}: {{duration}}"
+  },
+  "empty": {
+    "title": "W tym tygodniu nic jeszcze nie zmierzone",
+    "description": "Włącz zegar na zadaniu, a godziny trafią tutaj — do dnia, w którym zostały przepracowane."
+  }
+}

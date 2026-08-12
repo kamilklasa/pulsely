@@ -1,0 +1,13 @@
+{
+  "today": "Today",
+  "week": "This week",
+  "running": "A timer is running — these include it",
+  "chart": {
+    "title": "This week, day by day",
+    "day": "{{day}}: {{duration}}"
+  },
+  "empty": {
+    "title": "No time tracked this week",
+    "description": "Start a timer on a task and the hours land here, on the day you worked them."
+  }
+}
