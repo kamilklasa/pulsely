@@ -20,10 +20,12 @@ import {
   sortOrderBetween,
   startOfToday,
   startOfWeek,
+  useTaskRealtimeSync,
   useTasks,
   type Task,
   type TaskStatus,
 } from "@/entities/task";
+import { useSession } from "@/entities/session";
 import { useMoveTask } from "@/features/move-task";
 import { KanbanColumn, type ColumnProgress } from "./KanbanColumn";
 import { TaskCard } from "./TaskCard";
@@ -52,6 +54,10 @@ function groupByStatus(tasks: Task[]): Record<TaskStatus, Task[]> {
 export function KanbanBoard() {
   const { t } = useTranslation("board");
   const { data: tasks, isPending, isError } = useTasks();
+  const { session } = useSession();
+  // While the board is on screen, every other session of the same user writes
+  // straight into this one's cache — see useTaskRealtimeSync.
+  useTaskRealtimeSync(session?.user.id);
   const moveTask = useMoveTask();
   const columns = useMemo(() => groupByStatus(tasks ?? []), [tasks]);
   // Only the two time-boxed columns get a bar: "how much of what I planned for
