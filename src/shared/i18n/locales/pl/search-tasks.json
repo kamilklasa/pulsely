@@ -1,0 +1,11 @@
+{
+  "heading": "Szukaj zadań",
+  "placeholder": "Szukaj po tytule lub opisie…",
+  "noResults": "Brak wyników dla „{{query}}”.",
+  "noTasks": "Nie masz jeszcze zadań — dodaj je na tablicy.",
+  "hints": {
+    "navigate": "nawigacja",
+    "open": "otwórz",
+    "close": "Esc zamyka"
+  }
+}

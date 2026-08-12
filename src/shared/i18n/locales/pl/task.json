@@ -4,5 +4,11 @@
     "this_week": "Ten tydzień",
     "today": "Dzisiaj",
     "done": "Zrobione"
-  }
+  },
+  "empty": "Brak zadań",
+  "dropHint": "Upuść tutaj, aby przenieść",
+  "dragHandle": "Przeciągnij, aby przenieść",
+  "progressLabel": "Postęp: {{column}}",
+  "progressValue": "{{done}}/{{total}} zrobione",
+  "moreActions": "Więcej akcji"
 }

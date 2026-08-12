@@ -1,3 +1,6 @@
 {
-  "trigger": "Move task"
+  "toPrevious": "Move left",
+  "toNext": "Move right",
+  "markDone": "Mark as done",
+  "markUndone": "Move back to Today"
 }

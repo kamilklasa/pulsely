@@ -132,3 +132,69 @@ body {
     @apply font-sans;
   }
 }
+
+/* Registered so the angle interpolates — a plain custom property would jump
+   between keyframes instead of sweeping. */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-angle-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/* Hairline that traces the element's own radius: a conic gradient masked down
+   to a 1px ring, so the element keeps whatever (translucent) background it has.
+   The ring itself stays on the neutral border token in both themes; only the
+   short beam sweeping along it carries colour, kept to one warm amber→rose
+   run so it reads as refracted light rather than a rainbow. */
+@utility animated-border {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--border-angle),
+      var(--border) 0deg,
+      var(--border) 240deg,
+      oklch(0.86 0.13 88) 285deg,
+      oklch(0.76 0.16 45) 312deg,
+      oklch(0.68 0.17 12) 334deg,
+      oklch(0.72 0.14 350) 350deg,
+      var(--border) 360deg
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    animation: border-angle-spin 6s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Same ring, blurred — reads as the beam bleeding light rather than a
+     separate glow layer. */
+  &::after {
+    filter: blur(5px);
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-border::before,
+  .animated-border::after {
+    animation: none;
+  }
+}

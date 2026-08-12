@@ -1,9 +1,11 @@
 {
+  "trigger": "Add task",
   "form": {
-    "titlePlaceholder": "Add a task…",
+    "titlePlaceholder": "Task title…",
     "titleRequired": "Title is required",
     "submit": "Add",
     "submitting": "Adding…",
+    "cancel": "Cancel",
     "mutationError": "Couldn't create the task. Try again."
   }
 }

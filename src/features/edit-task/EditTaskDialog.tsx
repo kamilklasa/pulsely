@@ -1,17 +1,8 @@
-import { useMemo, useState } from "react";
-import { Pencil } from "lucide-react";
+import { useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useTranslation } from "react-i18next";
 import type { Task } from "@/entities/task";
-import {
-  Button,
-  Dialog,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-  Input,
-  Textarea,
-} from "@/shared/ui";
+import { Button, Dialog, DialogPopup, DialogTitle, Input, Textarea } from "@/shared/ui";
 import { useUpdateTask } from "./edit-task.data";
 import { createTitleSchema } from "./edit-task.schema";
 
@@ -84,22 +75,26 @@ function EditTaskFields({ task, onSaved }: { task: Task; onSaved: () => void }) 
   );
 }
 
-export function EditTaskDialog({ task }: { task: Task }) {
+// Controlled by the caller: the trigger now lives in the card's overflow menu,
+// which has to close itself before the dialog opens.
+export function EditTaskDialog({
+  task,
+  open,
+  onOpenChange,
+}: {
+  task: Task;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const { t } = useTranslation("edit-task");
-  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button variant="ghost" size="icon-sm" aria-label={t("trigger")}>
-            <Pencil />
-          </Button>
-        }
-      />
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPopup>
         <DialogTitle className="mb-4">{t("heading")}</DialogTitle>
-        {open ? <EditTaskFields key={task.id} task={task} onSaved={() => setOpen(false)} /> : null}
+        {open ? (
+          <EditTaskFields key={task.id} task={task} onSaved={() => onOpenChange(false)} />
+        ) : null}
       </DialogPopup>
     </Dialog>
   );

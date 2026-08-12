@@ -1,0 +1,12 @@
+{
+  "soon": "Soon",
+  "breakdown": {
+    "title": "Time breakdown",
+    "chartLabel": "Placeholder breakdown of tracked time",
+    "description": "Once the editor and browser send heartbeats, this splits the task's time across the apps you actually worked in."
+  },
+  "timeline": {
+    "title": "Timeline",
+    "description": "Every start, pause and column change will land here as a dated entry once time tracking is stored server-side."
+  }
+}

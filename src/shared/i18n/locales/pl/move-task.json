@@ -1,3 +1,6 @@
 {
-  "trigger": "Przenieś zadanie"
+  "toPrevious": "Przenieś w lewo",
+  "toNext": "Przenieś w prawo",
+  "markDone": "Oznacz jako zrobione",
+  "markUndone": "Cofnij do Dzisiaj"
 }

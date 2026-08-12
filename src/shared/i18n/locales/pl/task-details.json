@@ -1,0 +1,12 @@
+{
+  "soon": "Wkrótce",
+  "breakdown": {
+    "title": "Rozkład czasu",
+    "chartLabel": "Poglądowy rozkład zmierzonego czasu",
+    "description": "Kiedy edytor i przeglądarka zaczną wysyłać heartbeaty, czas zadania rozbije się tutaj na aplikacje, w których faktycznie pracowałaś/eś."
+  },
+  "timeline": {
+    "title": "Oś czasu",
+    "description": "Każdy start, pauza i zmiana kolumny trafi tu jako wpis z datą, kiedy pomiar czasu będzie zapisywany po stronie serwera."
+  }
+}

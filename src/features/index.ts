@@ -5,3 +5,6 @@ export * from "./create-task";
 export * from "./edit-task";
 export * from "./delete-task";
 export * from "./move-task";
+export * from "./search-tasks";
+export * from "./settings";
+export * from "./track-time";

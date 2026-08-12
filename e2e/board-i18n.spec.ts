@@ -11,8 +11,9 @@ if (!supabaseUrl || !serviceRoleKey) {
 }
 
 // Redeems a real magic link (via the admin API, same approach as the Seam B
-// integration test) to land on an authenticated /board with no UI switcher
-// on that screen — the persisted locale from #12 is what drives the copy.
+// integration test) to land on an authenticated /board — the persisted
+// locale from #12 (chosen on sign-in, before the account menu itself is
+// reachable) is what drives the board's copy.
 test("switching language on sign-in shows translated board copy after auth", async ({
   page,
   baseURL,
@@ -37,6 +38,8 @@ test("switching language on sign-in shows translated board copy after auth", asy
   await page.goto(actionLink!);
 
   await expect(page.getByRole("heading", { name: "Tablica" })).toBeVisible();
-  await expect(page.getByText(`Zalogowano jako ${email}`)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Wyloguj" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Menu konta" }).click();
+  await expect(page.getByText(email)).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Wyloguj" })).toBeVisible();
 });

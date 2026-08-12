@@ -4,5 +4,11 @@
     "this_week": "This Week",
     "today": "Today",
     "done": "Done"
-  }
+  },
+  "empty": "No tasks",
+  "dropHint": "Drop here to move",
+  "dragHandle": "Drag to move",
+  "progressLabel": "{{column}} progress",
+  "progressValue": "{{done}}/{{total}} Done",
+  "moreActions": "More actions"
 }

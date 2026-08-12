@@ -8,6 +8,8 @@ export interface Task {
   title: string;
   description: string | null;
   status: TaskStatus;
+  // Fractional rank within the column — see the add_task_sort_order migration.
+  sort_order: number;
   created_at: string;
   updated_at: string;
 }
