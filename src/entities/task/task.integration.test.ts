@@ -1,38 +1,10 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { type SupabaseClient } from "@supabase/supabase-js";
 import { beforeAll, describe, expect, it } from "vitest";
-
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !anonKey || !serviceRoleKey) {
-  throw new Error(
-    "Missing Supabase env vars for the Seam B integration test — copy .env.example to .env.local",
-  );
-}
+import { signInAsNewUser } from "@/shared/api/seam-b.utils";
 
 // Seam B — real local Supabase (`supabase start`), no mocking. The point is proving RLS actually
-// holds; a mocked client can't demonstrate that. Users are signed in via the admin API (magic
-// link redemption), same approach as session.integration.test.ts.
-async function signInAsNewUser(): Promise<SupabaseClient> {
-  const admin = createClient(supabaseUrl!, serviceRoleKey!);
-  const email = `seam-b-task-${crypto.randomUUID()}@example.com`;
-  const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-    type: "magiclink",
-    email,
-  });
-  if (linkError) throw linkError;
-
-  const client = createClient(supabaseUrl!, anonKey!);
-  const { error: verifyError } = await client.auth.verifyOtp({
-    email,
-    token: linkData.properties!.email_otp!,
-    type: "email",
-  });
-  if (verifyError) throw verifyError;
-
-  return client;
-}
+// holds; a mocked client can't demonstrate that. Sign-in (and the clock preflight that keeps a
+// drifted Docker VM from looking like a test failure) lives in the shared Seam B helper.
 
 describe("task CRUD + RLS isolation (Seam B)", () => {
   let clientA: SupabaseClient;
@@ -41,7 +13,7 @@ describe("task CRUD + RLS isolation (Seam B)", () => {
   let taskBId: string;
 
   beforeAll(async () => {
-    [clientA, clientB] = await Promise.all([signInAsNewUser(), signInAsNewUser()]);
+    [clientA, clientB] = await Promise.all([signInAsNewUser("task"), signInAsNewUser("task")]);
 
     const { data: taskA, error: errorA } = await clientA
       .from("task")

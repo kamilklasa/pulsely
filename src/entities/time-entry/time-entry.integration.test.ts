@@ -1,38 +1,10 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { type SupabaseClient } from "@supabase/supabase-js";
 import { beforeAll, describe, expect, it } from "vitest";
+import { signInAsNewUser } from "@/shared/api/seam-b.utils";
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !anonKey || !serviceRoleKey) {
-  throw new Error(
-    "Missing Supabase env vars for the Seam B integration test — copy .env.example to .env.local",
-  );
-}
-
-// Seam B — real local Supabase (`supabase start`), no mocking, same magic-link redemption as
-// task.integration.test.ts. The rules under test here (RLS isolation, one open entry per owner)
-// live in Postgres, so only a real database can show they hold.
-async function signInAsNewUser(): Promise<SupabaseClient> {
-  const admin = createClient(supabaseUrl!, serviceRoleKey!);
-  const email = `seam-b-time-entry-${crypto.randomUUID()}@example.com`;
-  const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-    type: "magiclink",
-    email,
-  });
-  if (linkError) throw linkError;
-
-  const client = createClient(supabaseUrl!, anonKey!);
-  const { error: verifyError } = await client.auth.verifyOtp({
-    email,
-    token: linkData.properties!.email_otp!,
-    type: "email",
-  });
-  if (verifyError) throw verifyError;
-
-  return client;
-}
+// Seam B — real local Supabase (`supabase start`), no mocking. The rules under test here (RLS
+// isolation, one open entry per owner) live in Postgres, so only a real database can show they
+// hold. Sign-in and the clock preflight come from the shared Seam B helper.
 
 async function createTask(client: SupabaseClient, title: string): Promise<string> {
   const { data, error } = await client.from("task").insert({ title }).select().single();
@@ -49,7 +21,10 @@ describe("time entry CRUD + RLS isolation (Seam B)", () => {
   let entryBId: string;
 
   beforeAll(async () => {
-    [clientA, clientB] = await Promise.all([signInAsNewUser(), signInAsNewUser()]);
+    [clientA, clientB] = await Promise.all([
+      signInAsNewUser("time-entry"),
+      signInAsNewUser("time-entry"),
+    ]);
     [taskAId, taskBId] = await Promise.all([
       createTask(clientA, "User A's task"),
       createTask(clientB, "User B's task"),
