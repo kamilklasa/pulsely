@@ -1,7 +1,6 @@
 {
   "heading": "Settings",
   "subheading": "Your account, security and connected services.",
-  "soon": "Soon",
   "account": {
     "title": "Account",
     "emailLabel": "Email address",
@@ -30,6 +29,14 @@
     "connectedAs": "Connected as {{email}}",
     "notConnected": "Not connected",
     "connect": "Connect",
-    "disconnect": "Disconnect"
+    "disconnect": "Disconnect",
+    "error": {
+      "lastIdentity": "Google is the only way to sign in to this account — disconnecting it would lock you out.",
+      "emailConflict": "Disconnecting would move this account onto an email address another account already uses.",
+      "alreadyLinked": "That Google account is already linked to an account.",
+      "linkingDisabled": "Connecting accounts is turned off for this project.",
+      "rateLimited": "Too many attempts. Try again in a few minutes.",
+      "generic": "Couldn't update the connection. Try again."
+    }
   }
 }

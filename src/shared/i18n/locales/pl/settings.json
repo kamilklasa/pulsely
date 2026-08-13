@@ -1,7 +1,6 @@
 {
   "heading": "Ustawienia",
   "subheading": "Twoje konto, bezpieczeństwo i połączone usługi.",
-  "soon": "Wkrótce",
   "account": {
     "title": "Konto",
     "emailLabel": "Adres e-mail",
@@ -30,6 +29,14 @@
     "connectedAs": "Połączono jako {{email}}",
     "notConnected": "Niepołączone",
     "connect": "Połącz",
-    "disconnect": "Odłącz"
+    "disconnect": "Odłącz",
+    "error": {
+      "lastIdentity": "Google to jedyny sposób logowania do tego konta — odłączenie odcięłoby Ci dostęp.",
+      "emailConflict": "Odłączenie przeniosłoby to konto na adres, którego używa już inne konto.",
+      "alreadyLinked": "To konto Google jest już z czymś połączone.",
+      "linkingDisabled": "Łączenie kont jest wyłączone w tym projekcie.",
+      "rateLimited": "Zbyt wiele prób. Spróbuj ponownie za kilka minut.",
+      "generic": "Nie udało się zmienić połączenia. Spróbuj ponownie."
+    }
   }
 }
