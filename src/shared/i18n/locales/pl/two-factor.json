@@ -25,7 +25,7 @@
   },
   "removeDialog": {
     "title": "Usuń uwierzytelnianie dwuskładnikowe",
-    "body": "Podaj aktualny kod z {{name}}, aby potwierdzić, że to Ty. Usunięcie obniża bezpieczeństwo konta.",
+    "body": "Podaj aktualny kod z aplikacji „{{name}}”, aby potwierdzić, że to Ty. Usunięcie obniża bezpieczeństwo konta.",
     "lastFactor": "To Twoja jedyna aplikacja. Usunięcie jej wyłączy uwierzytelnianie dwuskładnikowe.",
     "confirm": "Usuń",
     "removing": "Usuwanie…",
@@ -33,7 +33,7 @@
   },
   "challenge": {
     "title": "Podaj kod",
-    "body": "Otwórz aplikację uwierzytelniającą i podaj kod dla {{name}}.",
+    "body": "Otwórz aplikację uwierzytelniającą i podaj kod z „{{name}}”.",
     "submit": "Dalej",
     "submitting": "Sprawdzanie…",
     "signOut": "Zaloguj się na inne konto",

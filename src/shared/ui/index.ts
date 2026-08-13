@@ -1,5 +1,6 @@
 export { Button, buttonVariants } from "./button";
 export { Input } from "./input";
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./input-otp";
 export { Textarea } from "./textarea";
 export { Logo } from "./logo";
 export { GoogleIcon } from "./google-icon";

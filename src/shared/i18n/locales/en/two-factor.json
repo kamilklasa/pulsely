@@ -25,7 +25,7 @@
   },
   "removeDialog": {
     "title": "Remove two-factor authentication",
-    "body": "Enter a current code from {{name}} to confirm it's you. Removing it makes your account less safe.",
+    "body": "Enter a current code from “{{name}}” to confirm it's you. Removing it makes your account less safe.",
     "lastFactor": "This is your only authenticator. Removing it turns two-factor authentication off.",
     "confirm": "Remove",
     "removing": "Removing…",
@@ -33,7 +33,7 @@
   },
   "challenge": {
     "title": "Enter your code",
-    "body": "Open your authenticator app and enter the code for {{name}}.",
+    "body": "Open your authenticator app and enter the code from “{{name}}”.",
     "submit": "Continue",
     "submitting": "Checking…",
     "signOut": "Sign in as someone else",
