@@ -1,0 +1,57 @@
+{
+  "title": "Two-factor authentication",
+  "description": "An extra code from your authenticator app on every sign-in.",
+  "status": {
+    "on": "On",
+    "off": "Off"
+  },
+  "enable": "Set up",
+  "addBackup": "Add a backup app",
+  "remove": "Remove",
+  "backupWarning": {
+    "title": "Add a second app",
+    "body": "There are no recovery codes. If you lose this authenticator, only an administrator can get you back in — a second app is your way out."
+  },
+  "setup": {
+    "title": "Set up two-factor authentication",
+    "scan": "Scan this with your authenticator app.",
+    "manual": "Can't scan? Enter this key instead:",
+    "copy": "Copy key",
+    "copied": "Copied",
+    "confirm": "Turn on",
+    "confirming": "Checking…",
+    "cancel": "Cancel",
+    "namePlaceholder": "Phone"
+  },
+  "removeDialog": {
+    "title": "Remove two-factor authentication",
+    "body": "Enter a current code from {{name}} to confirm it's you. Removing it makes your account less safe.",
+    "lastFactor": "This is your only authenticator. Removing it turns two-factor authentication off.",
+    "confirm": "Remove",
+    "removing": "Removing…",
+    "cancel": "Keep it"
+  },
+  "challenge": {
+    "title": "Enter your code",
+    "body": "Open your authenticator app and enter the code for {{name}}.",
+    "submit": "Continue",
+    "submitting": "Checking…",
+    "signOut": "Sign in as someone else",
+    "useAnother": "Use a different app:"
+  },
+  "code": {
+    "label": "Code from the app",
+    "required": "Enter the code",
+    "digitsOnly": "Codes are digits only",
+    "length": "The code is {{count}} digits"
+  },
+  "error": {
+    "invalidCode": "That code isn't right. Check the app and try again.",
+    "expiredChallenge": "That code expired. Enter the current one.",
+    "factorLimit": "You've reached the maximum number of authenticator apps.",
+    "rateLimited": "Too many attempts. Try again in a few minutes.",
+    "totpDisabled": "Two-factor authentication isn't available right now.",
+    "generic": "Something went wrong. Try again."
+  },
+  "factorFallbackName": "Authenticator app"
+}

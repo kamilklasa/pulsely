@@ -1,0 +1,57 @@
+{
+  "title": "Uwierzytelnianie dwuskładnikowe",
+  "description": "Dodatkowy kod z aplikacji uwierzytelniającej przy każdym logowaniu.",
+  "status": {
+    "on": "Włączone",
+    "off": "Wyłączone"
+  },
+  "enable": "Skonfiguruj",
+  "addBackup": "Dodaj zapasową aplikację",
+  "remove": "Usuń",
+  "backupWarning": {
+    "title": "Dodaj drugą aplikację",
+    "body": "Nie ma kodów odzyskiwania. Jeśli stracisz tę aplikację, dostęp przywróci tylko administrator — druga aplikacja to Twoje wyjście awaryjne."
+  },
+  "setup": {
+    "title": "Skonfiguruj uwierzytelnianie dwuskładnikowe",
+    "scan": "Zeskanuj to w aplikacji uwierzytelniającej.",
+    "manual": "Nie możesz zeskanować? Wpisz ten klucz:",
+    "copy": "Kopiuj klucz",
+    "copied": "Skopiowano",
+    "confirm": "Włącz",
+    "confirming": "Sprawdzanie…",
+    "cancel": "Anuluj",
+    "namePlaceholder": "Telefon"
+  },
+  "removeDialog": {
+    "title": "Usuń uwierzytelnianie dwuskładnikowe",
+    "body": "Podaj aktualny kod z {{name}}, aby potwierdzić, że to Ty. Usunięcie obniża bezpieczeństwo konta.",
+    "lastFactor": "To Twoja jedyna aplikacja. Usunięcie jej wyłączy uwierzytelnianie dwuskładnikowe.",
+    "confirm": "Usuń",
+    "removing": "Usuwanie…",
+    "cancel": "Zostaw"
+  },
+  "challenge": {
+    "title": "Podaj kod",
+    "body": "Otwórz aplikację uwierzytelniającą i podaj kod dla {{name}}.",
+    "submit": "Dalej",
+    "submitting": "Sprawdzanie…",
+    "signOut": "Zaloguj się na inne konto",
+    "useAnother": "Użyj innej aplikacji:"
+  },
+  "code": {
+    "label": "Kod z aplikacji",
+    "required": "Podaj kod",
+    "digitsOnly": "Kod składa się tylko z cyfr",
+    "length": "Kod ma {{count}} cyfr"
+  },
+  "error": {
+    "invalidCode": "Ten kod się nie zgadza. Sprawdź aplikację i spróbuj ponownie.",
+    "expiredChallenge": "Ten kod wygasł. Podaj aktualny.",
+    "factorLimit": "Osiągnięto maksymalną liczbę aplikacji uwierzytelniających.",
+    "rateLimited": "Zbyt wiele prób. Spróbuj ponownie za kilka minut.",
+    "totpDisabled": "Uwierzytelnianie dwuskładnikowe jest teraz niedostępne.",
+    "generic": "Coś poszło nie tak. Spróbuj ponownie."
+  },
+  "factorFallbackName": "Aplikacja uwierzytelniająca"
+}

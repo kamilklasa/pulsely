@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useSession } from "@/entities/session";
+import { TwoFactorSection } from "@/features/two-factor";
 import {
   Badge,
   Button,
@@ -8,12 +9,11 @@ import {
   DialogPopup,
   DialogTitle,
   GoogleIcon,
-  Switch,
 } from "@/shared/ui";
 import { ChangeEmailForm } from "./ChangeEmailForm";
 
-// Two-factor and integrations are still stubs — the badge is the honest way to
-// say so, instead of shipping controls that silently do nothing.
+// Integrations are still a stub — the badge is the honest way to say so, instead
+// of shipping controls that silently do nothing.
 function SoonBadge() {
   const { t } = useTranslation("settings");
   return <Badge>{t("soon")}</Badge>;
@@ -77,16 +77,7 @@ export function SettingsDialog({
             <ChangeEmailForm />
           </Section>
 
-          <Section
-            title={t("twoFactor.title")}
-            description={t("twoFactor.description")}
-            action={
-              <div className="flex items-center gap-2.5">
-                <SoonBadge />
-                <Switch disabled aria-label={t("twoFactor.title")} />
-              </div>
-            }
-          />
+          <TwoFactorSection />
 
           <Section
             title={t("integrations.title")}

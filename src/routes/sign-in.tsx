@@ -1,12 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { SignInPage } from "@/pages";
-
-function sanitizeRedirect(target: unknown): string {
-  if (typeof target !== "string" || !target.startsWith("/") || target.startsWith("//")) {
-    return "/board";
-  }
-  return target;
-}
+import { sanitizeRedirect } from "@/shared/lib/redirect";
 
 export const Route = createFileRoute("/sign-in")({
   validateSearch: (search: Record<string, unknown>) => ({

@@ -23,10 +23,6 @@
       "generic": "Nie udało się rozpocząć zmiany. Spróbuj ponownie."
     }
   },
-  "twoFactor": {
-    "title": "Uwierzytelnianie dwuskładnikowe",
-    "description": "Dodatkowy kod z aplikacji uwierzytelniającej przy każdym logowaniu."
-  },
   "integrations": {
     "title": "Integracje",
     "description": "Usługi, które mogą Cię logować albo synchronizować się z tablicą.",
