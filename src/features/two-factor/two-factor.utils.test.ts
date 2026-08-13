@@ -5,6 +5,7 @@ import {
   factorLabel,
   needsBackupFactor,
   normalizeTotpCode,
+  qrCodeSrc,
   requiresChallenge,
   twoFactorErrorKey,
 } from "./two-factor.utils";
@@ -127,6 +128,39 @@ describe("normalizeTotpCode", () => {
 
   it("leaves an already-clean code alone", () => {
     expect(normalizeTotpCode("123456")).toBe("123456");
+  });
+});
+
+describe("qrCodeSrc", () => {
+  const svg = '<svg width="243"><rect style="fill:black" /></svg>';
+
+  // The trap this exists for: GoTrue already hands back the prefix the Supabase
+  // docs tell you to prepend. Doing it anyway produced a nested data URI and an
+  // image that silently never rendered.
+  it("does not prepend a prefix the payload already carries", () => {
+    const src = qrCodeSrc(`data:image/svg+xml;utf-8,${svg}`);
+
+    expect(src.startsWith("data:image/svg+xml;utf-8,")).toBe(true);
+    expect(src).not.toContain("data%3Aimage");
+    expect(decodeURIComponent(src.replace("data:image/svg+xml;utf-8,", ""))).toBe(svg);
+  });
+
+  // The shape the docs describe — still supported, since which one arrives is
+  // a GoTrue version detail rather than something this app controls.
+  it("prepends the prefix when the payload is bare markup", () => {
+    const src = qrCodeSrc(svg);
+
+    expect(decodeURIComponent(src.replace("data:image/svg+xml;utf-8,", ""))).toBe(svg);
+  });
+
+  // Raw `<`, `"` and newlines in a URI are invalid even where browsers forgive it.
+  it("percent-encodes the markup either way", () => {
+    expect(qrCodeSrc(svg)).not.toContain("<");
+    expect(qrCodeSrc(`data:image/svg+xml;utf-8,${svg}`)).not.toContain("<");
+  });
+
+  it("has nothing to render without a payload", () => {
+    expect(qrCodeSrc("")).toBe("");
   });
 });
 

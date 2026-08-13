@@ -45,6 +45,25 @@ export function needsBackupFactor(factors: Factor[] | undefined): boolean {
   return activeTotpFactors(factors).length === 1;
 }
 
+const SVG_DATA_URI_PREFIX = "data:image/svg+xml;utf-8,";
+
+// The Supabase docs say to build the image source by prepending this prefix to
+// `totp.qr_code`, but GoTrue already ships it prefixed — following the docs
+// nested one data URI inside another and the QR silently never rendered.
+// Normalising both shapes means a version that changes its mind cannot break it.
+//
+// The markup is percent-encoded either way: GoTrue sends raw `<`, quotes and
+// newlines, which browsers forgive in a data URI but which are not valid in one.
+export function qrCodeSrc(qrCode: string): string {
+  if (!qrCode) return "";
+
+  const markup = qrCode.startsWith(SVG_DATA_URI_PREFIX)
+    ? qrCode.slice(SVG_DATA_URI_PREFIX.length)
+    : qrCode;
+
+  return `${SVG_DATA_URI_PREFIX}${encodeURIComponent(markup)}`;
+}
+
 // Authenticator apps show the code as "123 456" and the space comes along when
 // it is copied. Stripping beats rejecting the exact string the app displayed.
 export function normalizeTotpCode(code: string): string {

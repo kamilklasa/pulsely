@@ -4,6 +4,7 @@ import { Check, Copy } from "lucide-react";
 import { Button, Dialog, DialogDescription, DialogPopup, DialogTitle } from "@/shared/ui";
 import { TotpCodeForm } from "./TotpCodeForm";
 import { useDiscardEnrolment, useEnrolTotp, useVerifyTotp } from "./two-factor.data";
+import { qrCodeSrc } from "./two-factor.utils";
 
 function SecretKey({ secret }: { secret: string }) {
   const { t } = useTranslation("two-factor");
@@ -98,11 +99,12 @@ export function TwoFactorSetupDialog({
           <>
             {/* Supabase returns the QR as an SVG document, so it goes in as an
                 image source rather than into the DOM — nothing from the server
-                gets to render as markup inside the dialog. */}
+                gets to render as markup inside the dialog. The white plate is
+                fixed, not themed: inverting a QR code stops scanners reading it. */}
             <img
-              src={`data:image/svg+xml;utf-8,${encodeURIComponent(enrolment.qrCode)}`}
+              src={qrCodeSrc(enrolment.qrCode)}
               alt=""
-              className="mt-4 aspect-square w-40 self-center rounded-xl border border-border/60 bg-white p-2"
+              className="mx-auto mt-4 block aspect-square w-40 rounded-xl border border-border/60 bg-white p-2"
             />
             <SecretKey secret={enrolment.secret} />
             <TotpCodeForm
