@@ -18,6 +18,7 @@ import taskEn from "./locales/en/task.json";
 import taskDetailsEn from "./locales/en/task-details.json";
 import timeDashboardEn from "./locales/en/time-dashboard.json";
 import trackTimeEn from "./locales/en/track-time.json";
+import twoFactorEn from "./locales/en/two-factor.json";
 import appShellPl from "./locales/pl/app-shell.json";
 import boardPl from "./locales/pl/board.json";
 import commonPl from "./locales/pl/common.json";
@@ -34,6 +35,7 @@ import taskPl from "./locales/pl/task.json";
 import taskDetailsPl from "./locales/pl/task-details.json";
 import timeDashboardPl from "./locales/pl/time-dashboard.json";
 import trackTimePl from "./locales/pl/track-time.json";
+import twoFactorPl from "./locales/pl/two-factor.json";
 import accountMenuPl from "./locales/pl/account-menu.json";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "./i18n.utils";
 
@@ -58,6 +60,7 @@ export const resources = {
     "task-details": taskDetailsEn,
     "time-dashboard": timeDashboardEn,
     "track-time": trackTimeEn,
+    "two-factor": twoFactorEn,
   },
   pl: {
     common: commonPl,
@@ -77,6 +80,7 @@ export const resources = {
     "task-details": taskDetailsPl,
     "time-dashboard": timeDashboardPl,
     "track-time": trackTimePl,
+    "two-factor": twoFactorPl,
   },
 } as const;
 

@@ -23,10 +23,6 @@
       "generic": "Couldn't start the change. Try again."
     }
   },
-  "twoFactor": {
-    "title": "Two-factor authentication",
-    "description": "An extra code from your authenticator app on every sign-in."
-  },
   "integrations": {
     "title": "Integrations",
     "description": "Services that can sign you in or sync with your board.",
