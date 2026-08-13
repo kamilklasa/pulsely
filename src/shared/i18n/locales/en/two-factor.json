@@ -34,7 +34,6 @@
   "challenge": {
     "title": "Enter your code",
     "body": "Open your authenticator app and enter the code from “{{name}}”.",
-    "submit": "Continue",
     "submitting": "Checking…",
     "signOut": "Sign in as someone else",
     "useAnother": "Use a different app:"

@@ -2,18 +2,18 @@ import { useId, useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useTranslation } from "react-i18next";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { Button, InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/shared/ui";
+import { Button, InputOTP, InputOTPGroup, InputOTPSlot } from "@/shared/ui";
+import { cn } from "@/shared/lib/utils";
 import { createTotpCodeSchema, TOTP_CODE_LENGTH } from "./two-factor.schema";
 import { twoFactorErrorKey } from "./two-factor.utils";
 
 const SLOTS = Array.from({ length: TOTP_CODE_LENGTH }, (_, index) => index);
-const GROUP_SIZE = TOTP_CODE_LENGTH / 2;
 
 // Setup, removal and the sign-in challenge all ask the same question — six digits
 // from the app — so they share the field, the validation and the error line, and
 // differ only in what the button says and what submitting does.
 export function TotpCodeForm({
-  submitLabel,
+  submitLabel = "",
   pendingLabel,
   isPending,
   error,
@@ -21,9 +21,11 @@ export function TotpCodeForm({
   onReset,
   variant = "default",
   autoFocus = false,
+  layout = "dialog",
   className,
 }: {
-  submitLabel: string;
+  // Unused by the "page" layout, which has no button to put it on.
+  submitLabel?: string;
   pendingLabel: string;
   isPending: boolean;
   error: unknown;
@@ -31,6 +33,11 @@ export function TotpCodeForm({
   onReset?: () => void;
   variant?: "default" | "destructive";
   autoFocus?: boolean;
+  // "dialog" keeps the button, because there it also names the action and its
+  // consequence ("Turn on", "Remove"). "page" is the sign-in challenge, where
+  // the code is the only thing being asked for and a button would just be a
+  // second way to do what the sixth digit already did.
+  layout?: "dialog" | "page";
   className?: string;
 }) {
   const { t } = useTranslation("two-factor");
@@ -48,6 +55,7 @@ export function TotpCodeForm({
   });
 
   const invalid = Boolean(error);
+  const onPage = layout === "page";
 
   return (
     <form
@@ -59,7 +67,10 @@ export function TotpCodeForm({
       className={className}
       noValidate
     >
-      <label htmlFor={fieldId} className="text-xs font-medium text-muted-foreground">
+      <label
+        htmlFor={fieldId}
+        className={cn("block text-xs font-medium text-muted-foreground", onPage && "text-center")}
+      >
         {t("code.label")}
       </label>
       <form.Field name="code" validators={{ onSubmit: schema }}>
@@ -91,44 +102,48 @@ export function TotpCodeForm({
               }}
             >
               <InputOTPGroup>
-                {SLOTS.slice(0, GROUP_SIZE).map((index) => (
+                {SLOTS.map((index) => (
                   <InputOTPSlot
                     key={index}
                     index={index}
                     aria-invalid={invalid}
-                    className="size-11 text-base"
-                  />
-                ))}
-              </InputOTPGroup>
-              <InputOTPSeparator />
-              <InputOTPGroup>
-                {SLOTS.slice(GROUP_SIZE).map((index) => (
-                  <InputOTPSlot
-                    key={index}
-                    index={index}
-                    aria-invalid={invalid}
-                    className="size-11 text-base"
+                    className="h-11 w-9 text-base"
                   />
                 ))}
               </InputOTPGroup>
             </InputOTP>
 
-            <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
-              {([canSubmit, isSubmitting]) => (
-                <Button
-                  type="submit"
-                  size="lg"
-                  variant={variant}
-                  className="w-full"
-                  disabled={!canSubmit || isPending || field.state.value.length < TOTP_CODE_LENGTH}
-                >
-                  {isSubmitting || isPending ? pendingLabel : submitLabel}
-                </Button>
-              )}
-            </form.Subscribe>
+            {onPage ? (
+              // Without a button there is nothing left to grey out, so the
+              // pending state needs to say so itself.
+              <p
+                // Reserved even when empty, so answering the challenge doesn't
+                // shift everything below it.
+                className="min-h-4 text-center text-xs text-muted-foreground"
+                aria-live="polite"
+              >
+                {isPending ? pendingLabel : ""}
+              </p>
+            ) : (
+              <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>
+                {([canSubmit, isSubmitting]) => (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    variant={variant}
+                    className="w-full"
+                    disabled={
+                      !canSubmit || isPending || field.state.value.length < TOTP_CODE_LENGTH
+                    }
+                  >
+                    {isSubmitting || isPending ? pendingLabel : submitLabel}
+                  </Button>
+                )}
+              </form.Subscribe>
+            )}
 
             {field.state.meta.errors.length ? (
-              <p className="text-xs text-destructive">
+              <p className={cn("text-xs text-destructive", onPage && "text-center")}>
                 {field.state.meta.errors
                   .map((issue) => (typeof issue === "string" ? issue : issue?.message))
                   .join(", ")}
@@ -138,7 +153,9 @@ export function TotpCodeForm({
         )}
       </form.Field>
       {error ? (
-        <p className="mt-2 text-xs text-destructive">{t(`error.${twoFactorErrorKey(error)}`)}</p>
+        <p className={cn("mt-2 text-xs text-destructive", onPage && "text-center")}>
+          {t(`error.${twoFactorErrorKey(error)}`)}
+        </p>
       ) : null}
     </form>
   );

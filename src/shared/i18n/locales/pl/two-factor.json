@@ -34,7 +34,6 @@
   "challenge": {
     "title": "Podaj kod",
     "body": "Otwórz aplikację uwierzytelniającą i podaj kod z „{{name}}”.",
-    "submit": "Dalej",
     "submitting": "Sprawdzanie…",
     "signOut": "Zaloguj się na inne konto",
     "useAnother": "Użyj innej aplikacji:"

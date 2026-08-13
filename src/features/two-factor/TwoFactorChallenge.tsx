@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/shared/api/supabase-client";
 import { Button, Select, SelectItem, SelectPopup, SelectTrigger, SelectValue } from "@/shared/ui";
 import { TotpCodeForm } from "./TotpCodeForm";
@@ -62,7 +61,6 @@ export function TwoFactorChallenge({ onVerified }: { onVerified: () => void }) {
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 p-8">
       <div className="flex w-full max-w-xs flex-col gap-4">
-        <ShieldCheck className="size-8 self-center text-muted-foreground" />
         <div className="text-center">
           <h1 className="text-2xl font-semibold">{t("challenge.title")}</h1>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
@@ -74,7 +72,7 @@ export function TwoFactorChallenge({ onVerified }: { onVerified: () => void }) {
           <>
             <TotpCodeForm
               autoFocus
-              submitLabel={t("challenge.submit")}
+              layout="page"
               pendingLabel={t("challenge.submitting")}
               isPending={verify.isPending}
               error={verify.error}
