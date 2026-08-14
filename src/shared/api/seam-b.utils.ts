@@ -39,11 +39,18 @@ async function assertPostgrestAcceptsFreshTokens(client: SupabaseClient) {
   );
 }
 
+// Stands in for the ingest function, which is the only writer `heartbeat` has.
+// A suite that needs a heartbeat to exist has no other way to make one — that is
+// the property under test, not an inconvenience to work around.
+export function serviceRoleClient(): SupabaseClient {
+  return createClient(supabaseUrl!, serviceRoleKey!);
+}
+
 // Seam B — real local Supabase (`supabase start`), no mocking. Users are signed in
 // by redeeming a magic link through the admin API rather than parsing Mailpit, since
 // these suites are about RLS and auth behaviour, not email delivery.
 export async function signInAsNewUser(emailPrefix: string): Promise<SupabaseClient> {
-  const admin = createClient(supabaseUrl!, serviceRoleKey!);
+  const admin = serviceRoleClient();
   const email = `seam-b-${emailPrefix}-${crypto.randomUUID()}@example.com`;
 
   const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
