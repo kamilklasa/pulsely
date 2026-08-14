@@ -37,6 +37,32 @@
       "linkingDisabled": "Łączenie kont jest wyłączone w tym projekcie.",
       "rateLimited": "Zbyt wiele prób. Spróbuj ponownie za kilka minut.",
       "generic": "Nie udało się zmienić połączenia. Spróbuj ponownie."
+    },
+    "wakatime": {
+      "title": "WakaTime",
+      "noKeys": "Brak kluczy — edytor jeszcze nic nie raportuje",
+      "keyCount_one": "{{count}} aktywny klucz",
+      "keyCount_few": "{{count}} aktywne klucze",
+      "keyCount_many": "{{count}} aktywnych kluczy",
+      "keyCount_other": "{{count}} aktywnych kluczy",
+      "labelPlaceholder": "Która maszyna? np. MacBook Pro",
+      "generate": "Wygeneruj klucz",
+      "revoke": "Unieważnij",
+      "created": "Utworzono {{date}}",
+      "lastUsed": "ostatnio użyty {{date}}",
+      "neverUsed": "nigdy nieużywany",
+      "copyKey": "Skopiuj klucz",
+      "copyConfig": "Skopiuj blok konfiguracji",
+      "newKey": {
+        "title": "Twój nowy klucz",
+        "shownOnce": "Widzisz go pierwszy i ostatni raz. Skopiuj teraz — później można go tylko unieważnić i wygenerować nowy, nigdy odzyskać.",
+        "cfgHint": "Wklej do {{path}}:",
+        "done": "Gotowe"
+      },
+      "error": {
+        "insecureContext": "Klucze można generować tylko przez bezpieczne połączenie (https).",
+        "generic": "Nie udało się utworzyć klucza. Spróbuj ponownie."
+      }
     }
   }
 }

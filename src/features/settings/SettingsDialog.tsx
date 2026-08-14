@@ -3,6 +3,7 @@ import { TwoFactorSection } from "@/features/two-factor";
 import { Dialog, DialogDescription, DialogPopup, DialogTitle } from "@/shared/ui";
 import { ChangeEmailForm } from "./ChangeEmailForm";
 import { GoogleIntegrationRow } from "./GoogleIntegrationRow";
+import { WakatimeIntegrationRow } from "./WakatimeIntegrationRow";
 
 function Section({
   title,
@@ -54,6 +55,7 @@ export function SettingsDialog({
 
           <Section title={t("integrations.title")} description={t("integrations.description")}>
             <GoogleIntegrationRow />
+            <WakatimeIntegrationRow />
           </Section>
         </div>
       </DialogPopup>
